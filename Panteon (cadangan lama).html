@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Panteon — Ensiklopedia Dewa-Dewi Yunani</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0e18; --card:#161c30; --gold:#c9a961; --gold-soft:#e8d19f;
+    --marble:#f1ece0; --ink:#c3bdac; --line:#c9a96135; --panel:#0d1224f0;
+    --meander:%23c9a961;
+  }
+  :root:not([data-theme="light"]){ color-scheme: dark; }
+  :root[data-theme="light"]{
+    --bg:#f4efdf; --card:#fdfaf1; --gold:#836223; --gold-soft:#5f4718;
+    --marble:#211b12; --ink:#4a4230; --line:#8362233a; --panel:#fbf7ecf5;
+    --meander:%23836223;
+    color-scheme: light;
+  }
+  *{box-sizing:border-box;}
+  html,body{min-height:100%; margin:0;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -5%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 65%),
+      radial-gradient(ellipse 700px 400px at 90% 30%, color-mix(in srgb, var(--gold) 8%, transparent), transparent 60%),
+      var(--bg);
+    color:var(--ink); font-family:'EB Garamond',serif;
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  h1,h2,.cat-title{font-family:'Cinzel',serif; font-weight:700;}
+  header{ text-align:center; padding:60px 20px 0; }
+  header h1{ margin:0; font-size:clamp(30px,5.5vw,48px); color:var(--gold-soft);
+    letter-spacing:.06em; text-shadow:0 2px 18px color-mix(in srgb, var(--gold) 40%, transparent); }
+  .ornament{ margin:18px auto; width:180px; height:14px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='14' viewBox='0 0 180 14'%3E%3Cline x1='0' y1='7' x2='72' y2='7' stroke='var(--meander)' stroke-width='1'/%3E%3Cline x1='108' y1='7' x2='180' y2='7' stroke='var(--meander)' stroke-width='1'/%3E%3Cpath d='M90 1 L97 7 L90 13 L83 7 Z' fill='var(--meander)'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; opacity:.8;
+  }
+  header p{ margin:0 auto 34px; max-width:560px; font-style:italic; opacity:.85; font-size:17px; }
+  .meander-strip{ height:13px; margin:0 0 26px; opacity:.55;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='13' viewBox='0 0 40 13'%3E%3Cpath d='M0 13 V5 H8 V9 H16 V1 H24 V9 H32 V5 H40' fill='none' stroke='var(--meander)' stroke-width='1.6'/%3E%3C/svg%3E");
+    background-repeat:repeat-x; background-position:left center;
+  }
+  .themeBtn{
+    position:fixed; top:calc(env(safe-area-inset-top,0px) + 18px); right:18px; z-index:6;
+    background:var(--card); border:1px solid var(--line); color:var(--ink); padding:6px 14px;
+    border-radius:20px; font-family:'EB Garamond',serif; font-size:14px; cursor:pointer;
+  }
+  main{ max-width:1120px; margin:0 auto; padding:0 24px 80px; }
+  .cat-title{ font-size:16px; color:var(--gold); letter-spacing:.05em; margin:56px 0 10px; }
+  .cat-title:first-of-type{ margin-top:6px; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(158px,1fr)); gap:18px; }
+  .card{
+    position:relative; background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:22px 12px 18px; text-align:center; cursor:pointer; overflow:hidden;
+    transition:transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s ease, border-color .28s ease;
+  }
+  .card::before{
+    content:""; position:absolute; top:0; left:12%; right:12%; height:2px;
+    background:linear-gradient(90deg, transparent, var(--c, var(--gold)), transparent);
+    opacity:.7;
+  }
+  .card:hover, .card:focus-visible{
+    transform:translateY(-6px); border-color:color-mix(in srgb, var(--c, var(--gold)) 60%, var(--line));
+    box-shadow:0 16px 32px -8px #00000050, 0 0 22px -6px var(--c, var(--gold)); outline:none;
+  }
+  .medallion{
+    width:70px; height:70px; margin:0 auto 12px; border-radius:50%; position:relative;
+    display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at 32% 26%, color-mix(in srgb, var(--c) 55%, white 45%) 0%, var(--c) 50%, color-mix(in srgb, var(--c) 65%, black 35%) 100%);
+    box-shadow:inset 0 2px 5px #ffffff55, inset 0 -4px 9px #00000060, 0 0 0 2px color-mix(in srgb, var(--gold) 70%, var(--c) 30%), 0 6px 16px -6px #00000070;
+  }
+  .medallion::after{
+    content:""; position:absolute; inset:-5px; border-radius:50%;
+    border:1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  }
+  .medallion svg{ width:34px; height:34px; filter:drop-shadow(0 1px 2px #00000070); position:relative; z-index:1; }
+  .card h3{ margin:0 0 3px; font-size:17px; color:var(--marble); font-family:'Cinzel',serif; font-weight:600;}
+  .card .epithet{ font-size:12.5px; font-style:italic; opacity:.75; line-height:1.3; }
+
+  .panel{
+    position:fixed; right:0; top:0; bottom:0; width:min(420px,92vw);
+    background:var(--panel); backdrop-filter:blur(8px); border-left:1px solid var(--line);
+    padding:calc(env(safe-area-inset-top,0px) + 66px) 32px 30px;
+    transform:translateX(100%); transition:transform .5s cubic-bezier(.19,1,.22,1);
+    z-index:10; overflow-y:auto; box-shadow:-24px 0 60px -20px #00000060;
+  }
+  .panel.open{ transform:translateX(0); }
+  .panel .medallion{ width:76px; height:76px; margin:0 0 18px; }
+  .panel .medallion svg{ width:38px; height:38px; }
+  .panel h2{ font-size:31px; margin:0 0 2px; color:var(--marble); }
+  .panel .epithet{ font-style:italic; color:var(--gold-soft); margin:0 0 18px; font-size:16px;}
+  .panel p{ line-height:1.7; font-size:17px; margin:0 0 14px;}
+  .panel .domain{ font-size:13px; color:var(--gold); border-top:1px solid var(--line); padding-top:12px; }
+  .closeBtn{
+    position:absolute; top:calc(env(safe-area-inset-top,0px) + 18px); right:22px;
+    background:none; border:1px solid var(--line); color:var(--ink); width:34px; height:34px;
+    border-radius:50%; cursor:pointer; font-size:18px; line-height:1;
+  }
+  .closeBtn:focus-visible,.themeBtn:focus-visible{ outline:2px solid var(--gold); outline-offset:3px;}
+  .backdrop{
+    position:fixed; inset:0; background:#000; opacity:0; pointer-events:none;
+    transition:opacity .4s ease; z-index:9;
+  }
+  .backdrop.open{ opacity:.5; pointer-events:auto; }
+  @media (max-width:520px){ .grid{ grid-template-columns:repeat(auto-fill,minmax(126px,1fr)); gap:14px; } }
+</style>
+</head>
+<body>
+<button class="themeBtn" id="themeBtn">Terang / Gelap</button>
+<header>
+  <h1>PANTEON YUNANI</h1>
+  <div class="ornament"></div>
+  <p>Dari dewa purba pencipta semesta hingga dewa-dewi kecil pendamping — lebih dari 70 entri, mencakup puluhan lagi lewat kelompok seperti Sembilan Muse. Sentuh sebuah lambang untuk membaca kisahnya.</p>
+</header>
+<main id="main"></main>
+
+<div class="backdrop" id="backdrop"></div>
+<div class="panel" id="panel" role="dialog" aria-hidden="true">
+  <button class="closeBtn" id="closeBtn" aria-label="Tutup">✕</button>
+  <div class="medallion" id="panelMedal"></div>
+  <h2 id="panelName"></h2>
+  <p class="epithet" id="panelEpithet"></p>
+  <p id="panelStory"></p>
+  <div class="domain" id="panelDomain"></div>
+</div>
+
+<script>
+var ICONS={
+  langit:'<path d="M13 2 L5 14 H11 L9 22 L20 9 H13 Z" fill="#fff"/>',
+  bawah:'<path d="M12 3 C8 9 5 11 5 15 A7 7 0 0 0 19 15 C19 11 16 9 12 3 Z" fill="#fff"/>',
+  titan:'<path d="M2 19 L8 8 L12 14 L16 5 L22 19 Z" fill="#fff"/>',
+  purba:'<circle cx="12" cy="12" r="8" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="12" cy="12" r="3.2" fill="#fff"/>',
+  laut:'<path d="M2 10 C5 6 7 14 10 10 C13 6 15 14 18 10 C20 8 21 8 22 9" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><path d="M2 15 C5 11 7 19 10 15 C13 11 15 19 18 15 C20 13 21 13 22 14" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>',
+  lain:'<polygon points="12,2 14.7,9 22,9.3 16.2,13.9 18.2,21 12,16.8 5.8,21 7.8,13.9 2,9.3 9.3,9" fill="#fff"/>'
+};
+
+var groups=[
+ {title:"Dewa Purba (Protogenoi)", items:[
+  {n:"Chaos", e:"Kekosongan Pertama", d:"Asal Mula Segala", c:"#3a3a45", cat:"purba", s:"Kekosongan tanpa bentuk yang ada sebelum segala sesuatu, bahkan sebelum para dewa. Dari Chaos munculah Gaia, Tartarus, Eros, dan unsur-unsur dasar yang akhirnya membentuk alam semesta seperti dikenal dalam mitologi Yunani."},
+  {n:"Gaia", e:"Ibu Bumi", d:"Bumi & Kehidupan", c:"#5f8a4f", cat:"purba", s:"Personifikasi bumi yang muncul tak lama setelah Chaos. Ia melahirkan Uranus, langit, lalu bersamanya menciptakan para Titan. Ketika Uranus memperlakukan anak-anaknya dengan kejam, Gaia-lah yang mendorong Kronos untuk menggulingkannya."},
+  {n:"Uranus", e:"Penguasa Langit Purba", d:"Langit", c:"#4a6a8a", cat:"purba", s:"Personifikasi langit yang menjadi pasangan sekaligus anak Gaia. Ia dikenal karena mengurung anak-anaknya yang dianggap buruk rupa jauh di dalam bumi, hingga akhirnya digulingkan secara kejam oleh putranya sendiri, Kronos."},
+  {n:"Nyx", e:"Dewi Malam", d:"Kegelapan", c:"#2a2a3a", cat:"purba", s:"Personifikasi malam yang begitu berkuasa hingga bahkan Zeus segan menentangnya. Dari kegelapannya lahir banyak kekuatan purba seperti Thanatos (Kematian), Hypnos (Tidur), dan Nemesis (Pembalasan)."},
+  {n:"Tartarus", e:"Jurang Terdalam", d:"Hukuman & Kegelapan Abadi", c:"#3a2a2a", cat:"purba", s:"Jurang paling dalam di bawah dunia, begitu jauh hingga sebuah landasan besi butuh sembilan hari untuk jatuh mencapainya. Tempat ini digunakan untuk memenjarakan para Titan yang kalah dan makhluk paling berbahaya di alam semesta."},
+  {n:"Erebus", e:"Personifikasi Kegelapan", d:"Bayangan Primordial", c:"#1f1f28", cat:"purba", s:"Personifikasi kegelapan purba yang muncul tak lama setelah Chaos. Bersama Nyx, malam, ia melahirkan Aether (cahaya langit) dan Hemera (siang), melambangkan bagaimana kegelapan dan cahaya saling melahirkan dalam kosmologi Yunani."},
+  {n:"Pontus", e:"Personifikasi Laut Purba", d:"Laut Sebelum Poseidon", c:"#2f6a84", cat:"laut", s:"Personifikasi laut yang lahir dari Gaia tanpa pasangan, mewakili lautan sebelum generasi dewa Olympus mengambil alih. Bersamanya, Gaia melahirkan Nereus, Thaumas, Phorcys, dan dewa-dewi laut purba lainnya."},
+  {n:"Aether", e:"Personifikasi Udara Ilahi", d:"Cahaya Langit Tinggi", c:"#bcd4e6", cat:"purba", s:"Personifikasi udara murni yang hanya dihirup para dewa di langit tertinggi, berbeda dari udara biasa yang dihirup manusia di bumi. Ia lahir dari Erebus dan Nyx, melambangkan cahaya paling murni dalam kosmos Yunani."},
+  {n:"Hemera", e:"Personifikasi Siang", d:"Cahaya Siang Hari", c:"#f0d98a", cat:"purba", s:"Personifikasi siang hari, putri Erebus dan Nyx serta saudari Aether. Dalam beberapa versi mitos, ia dan ibunya bergiliran menjaga pintu gerbang dunia — satu masuk saat yang lain keluar, menciptakan pergantian siang dan malam."},
+  {n:"Ananke", e:"Personifikasi Keniscayaan", d:"Takdir yang Tak Terelakkan", c:"#4a4a5a", cat:"purba", s:"Personifikasi kekuatan keniscayaan dan takdir yang bahkan tak bisa dilawan para dewa sekalipun. Bersama Chronos (waktu purba), ia dipercaya melilit dunia dalam wujud ular kosmis pada tradisi mitos penciptaan paling awal."}
+ ]},
+ {title:"Titan Generasi Pertama", items:[
+  {n:"Kronos", e:"Pemimpin Para Titan", d:"Waktu", c:"#7a6a3f", cat:"titan", s:"Titan bungsu yang menggulingkan ayahnya, Uranus, atas hasutan ibunya, Gaia. Ia memerintah pada masa yang disebut Zaman Keemasan, namun karena takut nasib serupa menimpanya, ia menelan setiap anaknya sendiri hingga akhirnya digulingkan oleh Zeus."},
+  {n:"Rhea", e:"Ibu Para Dewa Olympus", d:"Kesuburan & Keibuan", c:"#a68a5f", cat:"titan", s:"Istri sekaligus saudara Kronos yang diam-diam menyelamatkan Zeus dari ditelan ayahnya dengan menukarnya dengan batu berbungkus kain bayi. Tindakan inilah yang memungkinkan lahirnya generasi dewa Olympus berikutnya."},
+  {n:"Oceanus", e:"Titan Samudra Purba", d:"Sungai Pengelilingi Dunia", c:"#3f7a94", cat:"laut", s:"Titan tertua yang memerintah sungai raksasa yang dipercaya mengelilingi seluruh tepi dunia sebelum Poseidon menguasai lautan. Ia menikahi saudarinya, Tethys, dan bersama melahirkan ribuan dewa sungai serta bidadari laut. Ia memilih netral saat Zeus menggulingkan generasi ayahnya."},
+  {n:"Tethys", e:"Titanida Air Tawar", d:"Sungai & Mata Air", c:"#5f9ab0", cat:"laut", s:"Istri Oceanus yang menjadi ibu dari seluruh sungai di dunia serta ribuan bidadari air bernama Oceanid. Ia dipuja sebagai sumber kesuburan air tawar yang menghidupi daratan, dan dalam beberapa kisah turut membesarkan Hera."},
+  {n:"Hyperion", e:"Titan Cahaya Surgawi", d:"Cahaya & Pengamatan", c:"#e0b02f", cat:"titan", s:"Titan cahaya yang menikahi saudarinya, Theia, dan menjadi ayah dari Helios (matahari), Selene (bulan), dan Eos (fajar). Namanya berarti 'yang berjalan di atas', melambangkan pengamatannya atas dunia dari langit tinggi."},
+  {n:"Theia", e:"Titanida Penglihatan", d:"Cahaya & Kilauan", c:"#e3cd93", cat:"titan", s:"Titanida yang melambangkan cahaya, penglihatan, dan kilauan emas maupun permata. Bersama Hyperion, ia melahirkan Helios, Selene, dan Eos — tiga dewa yang menguasai siang, malam, dan fajar."},
+  {n:"Coeus", e:"Titan Kecerdasan", d:"Akal & Poros Langit", c:"#6a7a94", cat:"titan", s:"Titan yang melambangkan kecerdasan dan poros utara langit dalam mitos-mitos awal. Ia menikahi Phoebe dan menjadi kakek dari Apollo dan Artemis melalui putrinya, Leto."},
+  {n:"Phoebe", e:"Titanida Kecemerlangan", d:"Nubuat & Cahaya Bulan", c:"#c9b6e0", cat:"titan", s:"Titanida yang mewarisi kuil ramalan di Delphi sebelum akhirnya menyerahkannya kepada cucunya, Apollo. Ia menikah dengan Coeus dan menjadi nenek Apollo dan Artemis lewat putrinya, Leto."},
+  {n:"Crius", e:"Titan Rasi Bintang", d:"Konstelasi & Kekuatan Bumi", c:"#7a6a8a", cat:"titan", s:"Titan yang perannya paling samar dibanding saudara-saudaranya, dikaitkan dengan rasi bintang dan kekuatan bumi. Ia menikahi Eurybia, putri Pontus dan Gaia, dan menjadi ayah beberapa dewa bintang dan angin seperti Astraeus."},
+  {n:"Iapetus", e:"Titan Kefanaan", d:"Kematian & Umur Manusia", c:"#6a5a4a", cat:"titan", s:"Titan yang dihubungkan dengan sifat fana manusia dan ayah dari Atlas, Prometheus, dan Epimetheus. Melalui keturunannya, ia dianggap leluhur umat manusia dalam banyak versi mitos penciptaan Yunani."},
+  {n:"Themis", e:"Titanida Hukum", d:"Keadilan & Tata Tertib Ilahi", c:"#9aa06a", cat:"titan", s:"Titanida keadilan dan hukum ilahi yang dipercaya menetapkan tata tertib alam semesta. Ia menjadi salah satu istri Zeus dan melahirkan para Horae (penjaga musim) serta Moirai (dewi takdir)."},
+  {n:"Mnemosyne", e:"Titanida Ingatan", d:"Memori & Bahasa", c:"#8a94b0", cat:"titan", s:"Titanida personifikasi ingatan yang tidur bersama Zeus selama sembilan malam berturut-turut, melahirkan sembilan Muse. Ia dipuja sebagai sumber kemampuan mengingat dan berbahasa, penting bagi para penyair zaman kuno."}
+ ]},
+ {title:"Keturunan Titan & Dewa Cahaya", items:[
+  {n:"Atlas", e:"Penopang Langit", d:"Kekuatan & Ketahanan", c:"#6a7a8a", cat:"titan", s:"Titan yang memimpin perlawanan melawan Zeus dalam perang para Titan. Sebagai hukuman, ia dipaksa memikul langit di pundaknya untuk selama-lamanya, menjadi lambang beban abadi yang tak pernah bisa diletakkan."},
+  {n:"Prometheus", e:"Pencipta & Sahabat Manusia", d:"Api & Kecerdikan", c:"#c98a4f", cat:"titan", s:"Titan yang berpihak pada Zeus namun kemudian mengkhianatinya demi manusia dengan mencuri api dari Olympus. Sebagai hukuman, ia dirantai di puncak gunung dan hatinya dimakan burung elang setiap hari, lalu tumbuh kembali setiap malam."},
+  {n:"Epimetheus", e:"Saudara Prometheus", d:"Kecerobohan & Akibat", c:"#b08a5f", cat:"titan", s:"Adik Prometheus yang wataknya bertolak belakang — bertindak dulu baru berpikir belakangan. Ia menerima Pandora, wanita pertama yang dikirim Zeus sebagai hukuman, dan pernikahan itu akhirnya melepas segala keburukan ke dunia."},
+  {n:"Helios", e:"Dewa Matahari Purba", d:"Cahaya Siang", c:"#e0b02f", cat:"langit", s:"Dewa matahari generasi Titan yang mengendarai kereta emas melintasi langit setiap hari, mengawasi segala kejadian di bumi dari ketinggian. Perannya kelak banyak dikaitkan atau digantikan oleh Apollo dalam mitos-mitos yang lebih muda."},
+  {n:"Selene", e:"Dewi Bulan Purba", d:"Malam & Cahaya Bulan", c:"#a9b6d0", cat:"langit", s:"Dewi bulan generasi Titan yang mengendarai kereta peraknya melintasi langit malam. Ia jatuh cinta pada pemuda fana Endymion, dan memohon agar ia ditidurkan abadi supaya tetap muda dan tampan selamanya."},
+  {n:"Eos", e:"Dewi Fajar", d:"Cahaya Pagi", c:"#e0947a", cat:"langit", s:"Putri Hyperion dan Theia yang membuka gerbang langit setiap pagi agar saudaranya, Helios, dapat mengendarai kereta mataharinya. Kisah cintanya dengan Tithonus — yang dimintanya keabadian tanpa keremajaan — membuatnya menua selamanya."},
+  {n:"Leto", e:"Ibu Apollo dan Artemis", d:"Keibuan & Kesucian", c:"#a698c9", cat:"titan", s:"Titanida kekasih Zeus yang dikejar kemarahan Hera saat mengandung. Setelah mengembara mencari tempat aman, ia akhirnya melahirkan Apollo dan Artemis di pulau terapung Delos, jauh dari jangkauan murka Hera."},
+  {n:"Maia", e:"Bidadari Gunung, Ibu Hermes", d:"Kesuburan & Musim Semi", c:"#8ab08a", cat:"titan", s:"Putri sulung Atlas yang menjadi kekasih Zeus secara diam-diam di sebuah gua terpencil. Dari hubungan itu lahirlah Hermes, yang sejak bayi sudah menunjukkan kecerdikan luar biasa."}
+ ]},
+ {title:"Dua Belas Dewa Olympus", items:[
+  {n:"Zeus", e:"Raja Para Dewa", d:"Langit & Petir", c:"#e0a92f", cat:"langit", s:"Putra bungsu Kronos dan Rhea yang diselamatkan ibunya dari ditelan ayahnya sendiri. Bersama saudara-saudaranya, ia memimpin pemberontakan melawan para Titan dan akhirnya menjadi penguasa Olympus. Petir menjadi senjata sekaligus lambangnya, dan elang adalah hewan sucinya. Meski adil memimpin, ia terkenal karena banyak kisah asmara di luar pernikahannya dengan Hera."},
+  {n:"Hera", e:"Ratu Para Dewa", d:"Pernikahan & Keluarga", c:"#b48fd6", cat:"lain", s:"Putri Kronos dan Rhea, sekaligus kakak dan istri Zeus. Ia memerintah sebagai ratu langit dan pelindung utama pernikahan serta kesetiaan rumah tangga, dengan burung merak sebagai lambangnya. Kecemburuannya terhadap kekasih-kekasih Zeus memicu banyak kisah tragis, termasuk penganiayaannya terhadap Herakles."},
+  {n:"Poseidon", e:"Penguasa Lautan", d:"Laut & Gempa Bumi", c:"#3f8fb0", cat:"laut", s:"Saudara Zeus yang mendapat bagian lautan saat dunia dibagi tiga bersama Hades. Trisulanya mampu membangkitkan badai maupun gempa bumi. Ia menikahi Amphitrite dan tinggal di istana megah bawah laut, sementara kuda dan lumba-lumba dipercaya sebagai ciptaan serta hewan sucinya."},
+  {n:"Athena", e:"Dewi Kebijaksanaan", d:"Strategi & Kerajinan", c:"#7fae6f", cat:"lain", s:"Lahir langsung dari kepala Zeus dalam wujud dewasa berzirah, tanpa melalui seorang ibu. Ia menguasai kebijaksanaan, strategi perang, dan kerajinan tangan, dengan burung hantu dan pohon zaitun sebagai lambangnya setelah memenangkan kota Athena dari Poseidon. Ia sering membimbing pahlawan seperti Odysseus dan Perseus."},
+  {n:"Apollo", e:"Dewa Matahari & Musik", d:"Cahaya & Ramalan", c:"#e0a23f", cat:"langit", s:"Putra Zeus dan Leto, lahir kembar bersama Artemis di pulau Delos. Ia menguasai musik, puisi, penyembuhan, dan ramalan masa depan. Kecapi dan busur emas menjadi atributnya, sementara kuilnya di Delphi menjadi pusat nubuat paling dihormati lewat pendeta wanita bernama Pythia."},
+  {n:"Artemis", e:"Dewi Perburuan", d:"Hutan & Bulan", c:"#9db6c9", cat:"lain", s:"Saudara kembar Apollo, dewi perburuan, hutan belantara, dan bulan. Ia berkelana ditemani para bidadari serta rusa peliharaan sambil membawa busur perak, bersumpah kepada ayahnya untuk tak pernah menikah, dan menjadi pelindung wanita muda serta hewan liar."},
+  {n:"Ares", e:"Dewa Perang", d:"Kekerasan & Pertempuran", c:"#b04a3f", cat:"lain", s:"Putra Zeus dan Hera yang mewakili sisi liar dan berdarah dari peperangan, berbeda dari Athena yang mengutamakan taktik. Ia sering dibenci sesama dewa karena wataknya yang beringas, namun dicintai Aphrodite meski istri dewi itu adalah Hephaestus."},
+  {n:"Aphrodite", e:"Dewi Cinta & Kecantikan", d:"Cinta & Keindahan", c:"#d98aa3", cat:"laut", s:"Menurut salah satu versi mitos, ia lahir dari buih laut yang terbentuk setelah darah Uranus jatuh ke lautan. Kecantikannya memikat dewa maupun manusia, dan ikat pinggangnya konon dapat membuat siapa pun jatuh cinta. Meski dinikahkan dengan Hephaestus, hatinya condong kepada Ares."},
+  {n:"Hephaestus", e:"Pandai Besi Para Dewa", d:"Api & Kerajinan", c:"#c97a3f", cat:"titan", s:"Putra Hera yang dilempar dari Olympus karena dianggap cacat, sehingga berjalan pincang seumur hidup. Ia menjadi pandai besi paling piawai di antara para dewa, menempa petir Zeus, perisai Achilles, dan berbagai senjata ajaib lain di bengkel gunung berapinya."},
+  {n:"Hermes", e:"Utusan Para Dewa", d:"Perjalanan & Perdagangan", c:"#6fae8a", cat:"lain", s:"Putra Zeus dan Maia yang sejak bayi sudah menunjukkan kecerdikan luar biasa, termasuk mencuri ternak Apollo. Ia menjadi utusan resmi para dewa berkat sandal dan topi bersayapnya, sekaligus pelindung pedagang, musafir, penggembala, dan bahkan para pencuri."},
+  {n:"Demeter", e:"Dewi Pertanian", d:"Panen & Kesuburan", c:"#b89a3f", cat:"titan", s:"Dewi pertanian dan kesuburan tanah, putri Kronos dan Rhea. Ketika putrinya, Persephone, diculik Hades ke dunia bawah, kesedihannya membuat seluruh bumi mengalami musim dingin tanpa hasil panen — menjadi asal mula pergantian musim yang kita kenal hingga kini."},
+  {n:"Dionysus", e:"Dewa Anggur", d:"Perayaan & Teater", c:"#8a5fb0", cat:"lain", s:"Lahir dari paha Zeus setelah ibunya, Semele, wafat terbakar cahaya ilahi. Ia mengembara ke berbagai negeri mengajarkan cara membuat dan menikmati anggur, memimpin pengikut yang disebut Maenad dalam perayaan liar penuh musik, tarian, dan ekstasi."},
+  {n:"Hestia", e:"Dewi Perapian", d:"Rumah Tangga & Perapian Suci", c:"#d9b96a", cat:"lain", s:"Putri sulung Kronos dan Rhea yang menjaga api suci di setiap rumah dan kuil Yunani. Ia menolak lamaran Apollo maupun Poseidon dan bersumpah tetap perawan demi menjaga kedamaian Olympus, hingga rela menyerahkan kursinya kepada Dionysus."}
+ ]},
+ {title:"Penguasa Dunia Bawah", items:[
+  {n:"Hades", e:"Penguasa Dunia Bawah", d:"Kematian & Kekayaan Bumi", c:"#5a4a6b", cat:"bawah", s:"Saudara Zeus dan Poseidon yang mendapat bagian dunia bawah saat pembagian kekuasaan. Ia memerintah arwah orang mati dengan adil dan jarang meninggalkan wilayahnya, kecuali ketika menculik Persephone untuk dijadikan permaisurinya. Ia juga menguasai kekayaan mineral yang terkubur di dalam bumi."},
+  {n:"Persephone", e:"Ratu Dunia Bawah", d:"Musim & Kebangkitan", c:"#7a5f8a", cat:"bawah", s:"Putri Demeter yang diculik Hades ke dunia bawah dan akhirnya menjadi ratunya. Karena telah memakan biji delima di sana, ia terikat menghabiskan sepertiga tahun di dunia bawah — periode inilah yang dipercaya menjadi asal mula musim gugur dan dingin."},
+  {n:"Thanatos", e:"Personifikasi Kematian", d:"Akhir Kehidupan", c:"#4a4550", cat:"bawah", s:"Personifikasi kematian yang lembut, berbeda dari kematian penuh kekerasan yang menjadi wilayah saudaranya, Ares. Ia digambarkan berjubah gelap membawa jiwa orang yang telah tiba waktunya, sering muncul berdampingan dengan saudara kembarnya, Hypnos, dewa tidur."},
+  {n:"Hypnos", e:"Dewa Tidur", d:"Mimpi & Istirahat", c:"#5a5a7a", cat:"bawah", s:"Saudara kembar Thanatos yang tinggal di gua sunyi tempat matahari tak pernah masuk. Dengan sayap di pelipisnya, ia terbang membawa tidur kepada dewa maupun manusia, bahkan pernah berani menidurkan Zeus sendiri atas permintaan Hera."},
+  {n:"Charon", e:"Pengantar Arwah", d:"Penyeberangan Sungai Styx", c:"#3a3a3a", cat:"bawah", s:"Pengantar perahu tua yang menyeberangkan jiwa orang mati melintasi Sungai Styx menuju dunia bawah. Arwah harus membayar sekeping koin yang diletakkan di mulut jenazah agar bisa menyeberang; yang tak mampu membayar terlantar di tepi sungai selamanya."},
+  {n:"Moirai (Tiga Dewi Takdir)", e:"Clotho, Lachesis & Atropos", d:"Benang Kehidupan Manusia", c:"#6a5a7a", cat:"bawah", s:"Tiga bersaudari yang mengendalikan benang kehidupan setiap makhluk: Clotho memintal benangnya, Lachesis mengukur panjangnya, dan Atropos memotongnya saat ajal tiba. Bahkan para dewa Olympus tunduk pada keputusan mereka."},
+  {n:"Erinyes (Tiga Dewi Pembalasan)", e:"Alecto, Megaera & Tisiphone", d:"Kutukan & Balas Dendam", c:"#5a2a2a", cat:"bawah", s:"Tiga dewi mengerikan berambut ular yang muncul dari darah Uranus, bertugas mengejar dan menyiksa siapa pun yang melakukan kejahatan besar seperti pembunuhan keluarga. Mereka tak kenal ampun, bahkan tak tunduk pada perintah Zeus."}
+ ]},
+ {title:"Dewa Laut", items:[
+  {n:"Triton", e:"Utusan Lautan", d:"Ombak & Gelombang", c:"#3f7a94", cat:"laut", s:"Putra Poseidon dan Amphitrite berbadan manusia namun berekor ikan seperti duyung. Dengan meniup terompet kerang raksasanya, ia mampu menenangkan atau membangkitkan gelombang samudra sesuai perintah ayahnya."},
+  {n:"Amphitrite", e:"Ratu Lautan", d:"Laut Dalam", c:"#4f8aa0", cat:"laut", s:"Salah satu dari lima puluh putri dewa laut Nereus. Ia awalnya bersembunyi dari lamaran Poseidon, namun akhirnya bersedia menjadi ratunya dan memerintah lautan berdampingan dengannya."},
+  {n:"Nereus", e:"Lelaki Tua Laut", d:"Kebijaksanaan & Ramalan Laut", c:"#3f7a8a", cat:"laut", s:"Dewa laut tertua dan paling bijaksana, ayah dari lima puluh Nereid termasuk Amphitrite dan Thetis. Ia dikenal selalu jujur dan mampu meramal, meski sering berubah wujud untuk menghindari pertanyaan yang tak ingin dijawabnya."},
+  {n:"Proteus", e:"Dewa Laut Pengubah Wujud", d:"Perubahan & Ramalan", c:"#4a8a94", cat:"laut", s:"Dewa laut penggembala anjing laut Poseidon yang mampu mengubah wujudnya menjadi apa pun untuk menghindari ditangkap. Siapa pun yang berhasil menahannya hingga menyerah akan mendapat ramalan yang selalu benar."},
+  {n:"Phorcys", e:"Dewa Bahaya Laut Dalam", d:"Karang & Bahaya Tersembunyi", c:"#2a5a6a", cat:"laut", s:"Dewa laut purba yang melambangkan bahaya tersembunyi di lautan dalam, seperti karang dan monster laut. Bersama saudarinya, Ceto, ia menjadi orang tua dari banyak makhluk mengerikan dalam mitologi Yunani."}
+ ]},
+ {title:"Dewa Angin & Bintang", items:[
+  {n:"Anemoi (Empat Dewa Angin)", e:"Boreas, Notus, Zephyrus & Eurus", d:"Angin Utara, Selatan, Barat & Timur", c:"#8aa6c9", cat:"laut", s:"Empat bersaudara yang masing-masing menguasai arah mata angin: Boreas yang dingin dari utara, Notus yang lembap dari selatan, Zephyrus yang lembut dari barat, dan Eurus yang tak menentu dari timur. Mereka putra Titanida Eos dan Astraeus."},
+  {n:"Astraeus", e:"Titan Bintang", d:"Bintang & Planet", c:"#3a3a6a", cat:"titan", s:"Titan yang memerintah bintang-bintang di langit malam bersama istrinya, Eos, dewi fajar. Dari pernikahan mereka lahir keempat Anemoi (dewa angin) serta bintang-bintang yang menghiasi langit malam Yunani kuno."}
+ ]},
+ {title:"Dewa & Dewi Lainnya", items:[
+  {n:"Pan", e:"Dewa Alam Liar", d:"Hutan & Gembala", c:"#7a8a4f", cat:"lain", s:"Dewa alam liar berkaki dan bertanduk kambing, putra Hermes. Ia tinggal di hutan dan pegunungan Arcadia sambil memainkan seruling buluh ciptaannya sendiri, dan teriakannya yang tiba-tiba dipercaya menjadi asal kata 'panik'."},
+  {n:"Eros", e:"Dewa Cinta Asmara", d:"Hasrat & Ketertarikan", c:"#d97a94", cat:"lain", s:"Dalam mitos yang lebih muda, ia digambarkan sebagai putra Aphrodite yang nakal dan bersayap, memanah siapa pun dengan panah emas untuk menumbuhkan cinta atau panah timah untuk menolaknya — termasuk dalam kisah asmaranya sendiri dengan Psyche."},
+  {n:"Nike", e:"Dewi Kemenangan", d:"Kejayaan", c:"#c9a961", cat:"lain", s:"Personifikasi kemenangan yang bersayap dan sangat cepat, sering digambarkan mendampingi Zeus maupun Athena dalam pertempuran. Ia dianggap membawa kejayaan bagi siapa pun yang direstuinya, baik dalam perang maupun perlombaan olahraga."},
+  {n:"Iris", e:"Dewi Pelangi", d:"Pesan Para Dewa", c:"#8a6fc9", cat:"lain", s:"Personifikasi pelangi yang menjadi utusan Hera dan dewa-dewa Olympus lainnya. Ia bergerak secepat kilat menyampaikan pesan antara langit, laut, dan dunia bawah, menjadi penghubung ketiga wilayah tersebut."},
+  {n:"Hecate", e:"Dewi Sihir", d:"Persimpangan & Malam", c:"#5a4a6b", cat:"bawah", s:"Dewi sihir, ilmu gaib, dan persimpangan jalan yang dihormati Zeus sendiri karena kekuasaannya yang luas di langit, bumi, dan laut. Ia sering digambarkan membawa dua obor sambil menuntun jiwa-jiwa dalam kegelapan malam."},
+  {n:"Nemesis", e:"Dewi Pembalasan", d:"Keadilan & Ganjaran", c:"#7a4a4a", cat:"lain", s:"Personifikasi pembalasan dan keadilan ilahi, putri Nyx. Tugasnya menjatuhkan hukuman setimpal bagi manusia atau bahkan dewa yang bersikap terlalu sombong (hubris) terhadap kekuatan yang lebih tinggi."},
+  {n:"Hebe", e:"Dewi Kemudaan", d:"Masa Muda Abadi", c:"#e0a6b0", cat:"lain", s:"Putri Zeus dan Hera yang bertugas menuangkan nektar untuk para dewa Olympus selagi masih muda. Ia kemudian menikah dengan Herakles setelah pahlawan itu diangkat menjadi dewa."},
+  {n:"Eileithyia", e:"Dewi Persalinan", d:"Kelahiran & Kehamilan", c:"#c98aa6", cat:"lain", s:"Putri Zeus dan Hera yang hadir mendampingi setiap proses persalinan, baik dewa maupun manusia. Kehadirannya dipercaya menentukan mudah atau sulitnya suatu kelahiran."},
+  {n:"Tyche", e:"Dewi Keberuntungan", d:"Nasib Baik & Kemakmuran Kota", c:"#c9a961", cat:"lain", s:"Dewi keberuntungan yang menentukan nasib baik atau buruk suatu kota maupun individu secara acak. Ia sering digambarkan membawa tanduk kelimpahan dan kemudi kapal, melambangkan betapa mudahnya arah nasib berubah."},
+  {n:"Asclepius", e:"Dewa Pengobatan", d:"Kesehatan & Penyembuhan", c:"#7ab08a", cat:"lain", s:"Putra Apollo yang menjadi tabib begitu ulung hingga mampu menghidupkan orang mati, membuat Hades mengadu ke Zeus. Zeus akhirnya membunuhnya dengan petir, namun kemudian mengangkatnya menjadi dewa pengobatan; tongkat berulirkan ularnya masih menjadi simbol kedokteran hingga kini."},
+  {n:"Hygieia", e:"Dewi Kesehatan", d:"Kebersihan & Pencegahan Penyakit", c:"#8ac9a0", cat:"lain", s:"Putri Asclepius yang melambangkan kesehatan, kebersihan, dan pencegahan penyakit — berbeda dari ayahnya yang berfokus pada penyembuhan. Namanya menjadi asal kata 'hygiene' dalam bahasa modern."},
+  {n:"Enyo", e:"Dewi Perang Pendamping Ares", d:"Kehancuran & Kekacauan Perang", c:"#8a3a3a", cat:"lain", s:"Dewi perang yang mendampingi Ares di medan pertempuran, melambangkan kehancuran dan kekacauan yang ditimbulkan perang, sering muncul bersamanya menciptakan teror di antara pasukan yang bertikai."},
+  {n:"Deimos & Phobos", e:"Ketakutan & Kengerian", d:"Pendamping Ares dalam Perang", c:"#6a2a2a", cat:"lain", s:"Putra kembar Ares dan Aphrodite yang melambangkan kengerian (Deimos) dan ketakutan (Phobos) di medan perang. Keduanya selalu menyertai ayah mereka, menebarkan rasa takut ke hati para prajurit."},
+  {n:"Momus", e:"Dewa Sindiran", d:"Kritik & Olok-olok", c:"#7a7a4a", cat:"lain", s:"Dewa sindiran dan kritik yang gemar mengolok-olok kekurangan para dewa lain, hingga akhirnya diusir dari Olympus karena sikapnya yang terlalu tajam."},
+  {n:"Sembilan Muse", e:"Calliope, Clio, Erato, Euterpe, Melpomene, Polyhymnia, Terpsichore, Thalia & Urania", d:"Seni, Sastra & Ilmu Pengetahuan", c:"#a68ac9", cat:"lain", s:"Sembilan putri Zeus dan Mnemosyne (Ingatan) yang masing-masing menaungi satu cabang seni dan ilmu: puisi epik, sejarah, puisi cinta, musik, tragedi, puisi suci, tari, komedi, dan astronomi. Para penyair Yunani selalu memohon ilham mereka."}
+ ]}
+];
+
+var main=document.getElementById('main');
+groups.forEach(function(grp){
+  var h=document.createElement('h2'); h.className='cat-title'; h.textContent=grp.title;
+  var rule=document.createElement('div'); rule.className='meander-strip';
+  var grid=document.createElement('div'); grid.className='grid';
+  grp.items.forEach(function(g){
+    var card=document.createElement('div');
+    card.className='card'; card.tabIndex=0; card.setAttribute('role','button');
+    card.style.setProperty('--c', g.c);
+    card.innerHTML='<div class="medallion" style="--c:'+g.c+'"><svg viewBox="0 0 24 24">'+ICONS[g.cat]+'</svg></div>'+
+      '<h3>'+g.n+'</h3><div class="epithet">'+g.e+'</div>';
+    function open(){ openPanel(g); }
+    card.addEventListener('click', open);
+    card.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); } });
+    grid.appendChild(card);
+  });
+  main.appendChild(h); main.appendChild(rule); main.appendChild(grid);
+});
+
+var panel=document.getElementById('panel'), backdrop=document.getElementById('backdrop');
+function openPanel(g){
+  document.getElementById('panelMedal').style.setProperty('--c', g.c);
+  document.getElementById('panelMedal').innerHTML='<svg viewBox="0 0 24 24">'+ICONS[g.cat]+'</svg>';
+  document.getElementById('panelName').textContent=g.n;
+  document.getElementById('panelEpithet').textContent=g.e;
+  document.getElementById('panelStory').textContent=g.s;
+  document.getElementById('panelDomain').textContent='Ranah: '+g.d;
+  panel.classList.add('open'); backdrop.classList.add('open'); panel.setAttribute('aria-hidden','false');
+}
+function closePanel(){ panel.classList.remove('open'); backdrop.classList.remove('open'); panel.setAttribute('aria-hidden','true'); }
+document.getElementById('closeBtn').addEventListener('click', closePanel);
+backdrop.addEventListener('click', closePanel);
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closePanel(); });
+
+document.getElementById('themeBtn').addEventListener('click', function(){
+  var root=document.documentElement;
+  root.setAttribute('data-theme', root.getAttribute('data-theme')==='light' ? 'dark':'light');
+});
+</script>
+</body>
+</html>
