@@ -962,6 +962,7 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
     <button class="close" id="pohonClose" aria-label="Tutup">×</button>
     <h3 id="pohonTitle">Pohon Kehidupan Dewa</h3>
     <p class="jx-sub">Dari Chaos hingga generasi Olimpus. Arahkan kursor untuk menelusuri garis keturunan, ketuk simpul untuk membuka kisah.</p>
+    <p style="text-align:center;margin:0 0 16px"><a class="btn" href="Pohon Kehidupan — Pohon Dewa.html">🌳 Buka halaman pohon penuh →</a></p>
     <div class="pohon-wrap" id="pohonWrap"></div>
   </div>
 </div>
@@ -1547,6 +1548,19 @@ function init(){
     b.setAttribute('aria-label', Suara.on ? 'Matikan musik' : 'Nyalakan musik');
     b.title = Suara.on ? 'Matikan musik' : 'Nyalakan musik';
   });
+  window.addEventListener('hashchange', function(){
+    try{
+      var gate = document.getElementById('gate');
+      if(gate && !gate.classList.contains('gone')){
+        gate.classList.add('leaving');
+        setTimeout(function(){ gate.classList.add('gone'); document.body.classList.add('reveal'); document.body.style.overflow = ''; }, 420);
+        setTimeout(function(){ if(gate.parentNode) gate.parentNode.removeChild(gate); }, 900);
+      }
+    }catch(e){}
+    var g = dewaDariHash();
+    if(g){ if(!cur || cur !== g) openModal(g); }
+    else if($('#modal').classList.contains('open')) closeModal();
+  });
   document.addEventListener('keydown', function(e){
     if(e.key === 'Escape' && $('#modal').classList.contains('open')){ closeModal(); return; }
     if(e.key === '/' && document.activeElement !== q && !$('#modal').classList.contains('open')){
@@ -1573,6 +1587,8 @@ function init(){
   document.addEventListener('keydown', function(e){
     if(e.key === 'Escape' && document.querySelector('.jx.open')) tutupJx();
   });
+  var dh = dewaDariHash();
+  if(dh){ setTimeout(function(){ openModal(dh); }, 800); }
 }
 
 /* ---------- penyalaan kepala kelompok saat terlihat ---------- */
@@ -2053,6 +2069,16 @@ function tumbuhMelayang(){
     }
   }catch(e){}
 }
+/* ===== Tautan langsung per dewa: #dewa=nama ===== */
+function slugDewa(g){ return nrm(g.n).split(' ').join('-'); }
+function dewaDariHash(){
+  try{
+    var m = /dewa=([^&]+)/.exec(location.hash || '');
+    if(!m) return null;
+    for(var i = 0; i < FLAT.length; i++){ if(slugDewa(FLAT[i]) === m[1]) return FLAT[i]; }
+  }catch(e){}
+  return null;
+}
 /* ---------- modal ---------- */
 var cur = null;
 function openModal(it){
@@ -2095,6 +2121,7 @@ function openModal(it){
     '</div>';
   var m = $('#modal');
   m.classList.add('open');
+  try{ location.hash = 'dewa=' + slugDewa(it); }catch(e){}
   m.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
   Suara.whoosh(true);
@@ -2116,6 +2143,7 @@ function step(dir){
 function closeModal(){
   var m = $('#modal');
   m.classList.remove('open');
+  try{ if((location.hash || '').indexOf('dewa=') > -1) history.replaceState(null, '', location.pathname + location.search); }catch(e){}
   m.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
   Suara.whoosh(false);
@@ -2664,6 +2692,7 @@ var Gerbang = {
       }
     }catch(e){}
     var t = setTimeout(enter, 6000);
+    try{ if(/dewa=/.test(location.hash || '')){ clearTimeout(t); enter(); } }catch(e){}
     function masuk(){ clearTimeout(t); enter(); mulaiMusik(); }
     var eb = document.getElementById('enterBtn');
     if(eb) eb.addEventListener('click', function(ev){ ev.stopPropagation(); masuk(); });

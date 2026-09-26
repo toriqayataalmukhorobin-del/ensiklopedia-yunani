@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pohon Kehidupan — Pohon Dewa Yunani</title>
+<meta name="description" content="Pohon kehidupan raksasa 88 dewa-dewi Yunani: dari akar Chaos hingga tajuk Olimpus. Temukan buah dewa di tajuknya.">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15.5' fill='%230a0d18'/%3E%3Cpath d='M16 4 C16 12 14 16 8 22 C14 20 16 18 16 28 C16 18 18 20 24 22 C18 16 16 12 16 4Z' fill='%23d4af37'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05070f; --gold:#d4af37; --gold-2:#f2dda6; --marble:#f6f1e3;
+  --ink:#c6c0af; --ink-2:#9a9585; --line:rgba(212,175,55,.20); --line-2:rgba(212,175,55,.38);
+  --ff-d:'Cinzel',Georgia,serif; --ff-b:'EB Garamond',Georgia,serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0; min-height:100vh; color:var(--ink); font-family:var(--ff-b); font-size:17px; overflow-x:hidden;
+  background:linear-gradient(180deg,#03050c 0%,#0a1024 30%,#0e1432 52%,#14240f 74%,#060905 100%)}
+#kunang{position:fixed; inset:0; z-index:3; pointer-events:none}
+.bulan{position:fixed; top:6%; right:8%; width:120px; height:120px; border-radius:50%; z-index:0; pointer-events:none;
+  background:radial-gradient(circle at 42% 38%, #fdf6e0 0 28%, #e8d9ae 45%, rgba(232,217,174,.25) 62%, transparent 72%)}
+.kabut{position:fixed; z-index:2; pointer-events:none; border-radius:50%; filter:blur(34px); opacity:.13;
+  background:radial-gradient(closest-side, rgba(220,200,150,.8), transparent 72%); animation:kabutGerak 46s ease-in-out infinite alternate}
+@keyframes kabutGerak{ from{transform:translateX(-9vw)} to{transform:translateX(9vw)} }
+.gugur{position:fixed; top:-40px; z-index:3; pointer-events:none; opacity:.5; font-size:18px; animation:gugur linear infinite}
+@keyframes gugur{ to{transform:translateY(112vh) rotate(340deg)} }
+.topbar{position:sticky; top:0; z-index:40; background:rgba(5,7,15,.85); backdrop-filter:blur(14px); border-bottom:1px solid var(--line)}
+.top-in{max-width:1240px; margin:0 auto; padding:12px 22px; display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+.kembali{display:inline-flex; align-items:center; gap:8px; text-decoration:none; padding:9px 16px; border-radius:999px;
+  border:1px solid var(--line); color:var(--ink); font-family:var(--ff-d); font-size:12px; letter-spacing:.12em; text-transform:uppercase}
+.kembali:hover{color:var(--marble); border-color:var(--line-2)}
+.judul{flex:1; min-width:200px}
+.judul h1{margin:0; font-family:var(--ff-d); font-size:clamp(18px,3vw,26px); letter-spacing:.08em; color:var(--gold-2)}
+.judul p{margin:2px 0 0; font-size:13.5px; font-style:italic; color:var(--ink-2)}
+.alat{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.zoombtn{width:36px; height:36px; border-radius:50%; border:1px solid var(--line-2); background:transparent;
+  color:var(--gold-2); font-size:18px; cursor:pointer; display:grid; place-items:center}
+.zoombtn:hover{background:rgba(212,175,55,.14)}
+.tgl{display:inline-flex; align-items:center; gap:7px; font-size:13.5px; color:var(--ink-2); cursor:pointer;
+  border:1px solid var(--line); border-radius:999px; padding:8px 14px}
+.tgl input{accent-color:var(--gold)}
+.cari{position:relative}
+.cari input{padding:9px 14px 9px 36px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.05);
+  color:var(--marble); font-family:var(--ff-b); font-size:15px; outline:none; width:190px}
+.cari input:focus{border-color:var(--line-2); box-shadow:0 0 0 4px rgba(212,175,55,.12)}
+.cari svg{position:absolute; left:12px; top:50%; transform:translateY(-50%); width:15px; height:15px; opacity:.55}
+.panggung{position:relative; z-index:2; max-width:1400px; margin:0 auto; padding:10px 18px 60px}
+.legenda{display:flex; gap:8px 16px; flex-wrap:wrap; justify-content:center; margin:14px 0 6px; font-size:13px; color:var(--ink-2)}
+.gulung{overflow:auto; border:1px solid var(--line); border-radius:20px; scrollbar-width:thin;
+  background:radial-gradient(900px 300px at 50% 0%, rgba(212,175,55,.05), transparent 70%); max-height:78vh}
+#pohonZoom{transform-origin:0 0}
+#pohonSvg{display:block}
+.buah{cursor:pointer}
+.buah .cahaya{animation:buahNapas 4s ease-in-out infinite}
+@keyframes buahNapas{ 0%,100%{opacity:.3} 50%{opacity:.55} }
+.buah .inti{transition:all .25s ease}
+.buah:hover .halo, .buah.pilih .halo{filter:drop-shadow(0 0 14px currentColor)}
+.buah text{display:none; font-family:var(--ff-d); fill:#f2e7c9; paint-order:stroke; stroke:#060913; stroke-width:4px}
+body.tampil-nama .buah text{display:block}
+.buah.pilih .halo{stroke:var(--gold-2); stroke-width:2.5}
+.tajuk-goyang{animation:tajukGoyang 13s ease-in-out infinite alternate; transform-box:fill-box; transform-origin:50% 100%}
+@keyframes tajukGoyang{ from{transform:rotate(-.45deg)} to{transform:rotate(.45deg)} }
+.daun-goyang{animation:daunGoyang 6s ease-in-out infinite alternate; transform-box:fill-box; transform-origin:center}
+@keyframes daunGoyang{ from{transform:rotate(-9deg)} to{transform:rotate(9deg)} }
+#tip{position:fixed; z-index:60; pointer-events:none; display:none; text-align:center;
+  background:rgba(8,11,22,.94); border:1px solid var(--line-2); border-radius:12px; padding:8px 14px; max-width:230px}
+#tip b{display:block; font-family:var(--ff-d); font-size:15px; color:var(--marble); letter-spacing:.04em}
+#tip span{font-size:12.5px; font-style:italic; color:var(--gold-2)}
+.panel{position:fixed; z-index:50; background:linear-gradient(180deg,#141b3a,#0b1028); border:1px solid var(--line-2);
+  box-shadow:0 40px 90px -30px #000; padding:24px; overflow:auto;
+  right:18px; top:90px; width:min(340px,calc(100vw - 36px)); max-height:calc(100vh - 120px); border-radius:20px}
+.panel[hidden]{display:none}
+.panel .tutup{position:absolute; top:10px; right:10px; width:32px; height:32px; border-radius:50%;
+  border:1px solid var(--line-2); background:transparent; color:var(--ink); cursor:pointer; font-size:16px}
+.panel h2{margin:0; font-size:26px; color:var(--marble); font-weight:600}
+.panel .ep{font-style:italic; color:var(--gold-2); margin:4px 0 2px}
+.panel .rn{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-2); margin:0 0 12px}
+.panel dl{margin:0; display:grid; gap:10px; font-size:14px}
+.panel dt{font-family:var(--ff-d); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold)}
+.panel dd{margin:2px 0 0; color:var(--ink)}
+.kerabat{display:flex; flex-wrap:wrap; gap:7px; margin-top:6px}
+.kerabat span{cursor:pointer; font-size:13px; padding:4px 12px; border-radius:999px; border:1px solid var(--line);
+  background:rgba(201,164,92,.1); color:var(--marble)}
+.kerabat span:hover{background:rgba(212,175,55,.22)}
+.kisah{display:block; text-align:center; margin-top:16px; padding:12px; border-radius:12px; text-decoration:none;
+  font-family:var(--ff-d); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#1a1408;
+  background:linear-gradient(180deg,#efdfae,#c9a45c)}
+.kisah:hover{filter:brightness(1.08)}
+.pil{position:fixed; z-index:50; left:50%; bottom:18px; transform:translateX(-50%); font-size:13px; font-style:italic;
+  color:var(--ink-2); background:rgba(5,7,15,.72); padding:8px 18px; border-radius:999px; border:1px solid var(--line); white-space:nowrap}
+@media (max-width:760px){ .panel{left:12px; right:12px; top:auto; bottom:12px; width:auto; max-height:46vh} .cari input{width:150px} }
+@media (prefers-reduced-motion:reduce){
+  .buah .cahaya,.daun-goyang,.tajuk-goyang,.gugur,.kabut{animation:none !important}
+}
+</style>
+</head>
+<body>
+<div class="bulan" aria-hidden="true"></div>
+<div class="kabut" style="width:44vw;height:150px;top:20%;left:2%" aria-hidden="true"></div>
+<div class="kabut" style="width:38vw;height:130px;top:46%;right:0;animation-delay:-20s" aria-hidden="true"></div>
+<canvas id="kunang" aria-hidden="true"></canvas>
+<header class="topbar"><div class="top-in">
+  <a class="kembali" href="Panteon — Ensiklopedia Dewa-Dewi Yunani.html">← Panteon</a>
+  <div class="judul"><h1>POHON KEHIDUPAN DEWA</h1><p id="ringkas">Memuat…</p></div>
+  <div class="alat">
+    <label class="cari"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="qcari" placeholder="Cari buah…" aria-label="Cari dewa di pohon"></label>
+    <label class="tgl"><input type="checkbox" id="tglNama"> Nama</label>
+    <button class="zoombtn" id="zOut" aria-label="Perkecil">−</button>
+    <button class="zoombtn" id="zIn" aria-label="Perbesar">+</button>
+    <button class="zoombtn" id="zReset" aria-label="Atur ulang">⤾</button>
+  </div>
+</div></header>
+<main class="panggung">
+  <div class="legenda"><span>🔎 Arahkan kursor ke tajuk — buah dewa bercahaya menanti</span><span>🌿 Akar purba di bawah tanah</span></div>
+  <div class="gulung" id="gulung"><div id="pohonZoom"></div></div>
+</main>
+<div id="tip" aria-hidden="true"><b></b><span></span></div>
+<aside class="panel" id="panel" hidden aria-live="polite">
+  <button class="tutup" id="panelTutup" aria-label="Tutup">×</button>
+  <div id="panelIsi"></div>
+</aside>
+<div class="pil">Geser untuk menjelajah · cubitan atau tombol untuk zoom</div>
+<script>
+var TREEDATA = [{"n": "Chaos", "e": "Kekosongan Pertama", "d": "Asal Mula Segala", "c": "#3a3a45", "o": "Tidak ada", "s": "Tidak ada", "a": "Gaia, Tartarus, Nyx, Erebus, Aether, Eros", "home": "Tempat yang belum ada letak", "g": "proto"}, {"n": "Gaia", "e": "Ibu Bumi", "d": "Bumi & Kehidupan", "c": "#5f8a4f", "o": "Lahir dari Chaos", "s": "Uranus, saudara sekaligus suami", "a": "Dua belas Titan, Porthos, Nereus, Thaumas, Phorcys, Ceto, Pluto", "home": "Seluruh bumi; kuil di Delphi dan Plataea", "g": "proto"}, {"n": "Uranus", "e": "Penguasa Langit Purba", "d": "Langit", "c": "#4a6a8a", "o": "Lahir dari Gaia", "s": "Gaia, saudara sekaligus suami", "a": "Dua belas Titan, Cyclopes, Hecatoncheires", "home": "Langit yang membungkus bumi; kuil di Samos dan Athena", "g": "proto"}, {"n": "Nyx", "e": "Dewi Malam", "d": "Kegelapan", "c": "#2a2a3a", "o": "Lahir dari Chaos", "s": "Dalam Hesiodos ia melahirkan sendiri", "a": "Aether, Hemera, Thanatos, Hypnos, Nemesis, Alecto, Megaera, Tisiphone", "home": "Ruang malam tanpa bintang", "g": "proto"}, {"n": "Erebus", "e": "Personifikasi Kegelapan", "d": "Bayangan Primordial", "c": "#1f1f28", "o": "Lahir dari Chaos", "s": "Nyx", "a": "Aether dan Hemera", "home": "Kegelapan yang mendahului waktu", "g": "proto"}, {"n": "Aether", "e": "Personifikasi Udara Ilahi", "d": "Cahaya Langit Tinggi", "c": "#bcd4e6", "o": "Erebus dan Nyx", "s": "Tidak ada", "a": "Tidak ada, karena ia personifikasi", "home": "Lapisan tertinggi langit", "g": "proto"}, {"n": "Hemera", "e": "Personifikasi Siang", "d": "Cahaya Siang Hari", "c": "#f0d98a", "o": "Erebus dan Nyx", "s": "Tidak ada", "a": "Tidak ada dalam versi utama", "home": "Kubah langit sejak pagi hingga sore", "g": "proto"}, {"n": "Pontus", "e": "Personifikasi Laut Purba", "d": "Laut Sebelum Poseidon", "c": "#2f6a84", "o": "Lahir dari Gaia tanpa pasangan", "s": "Tidak ada", "a": "Nereus, Thaumas, Phorcys, Ceto, Eurybia", "home": "Laut dalam tanpa garis pantai", "g": "proto"}, {"n": "Tartarus", "e": "Jurang Terdalam", "d": "Hukuman & Kegelapan Abadi", "c": "#3a2a2a", "o": "Lahir dari Chaos", "s": "Tidak ada", "a": "Tidak ada", "home": "Jurang paling dalam di bawah dunia", "g": "proto"}, {"n": "Ananke", "e": "Personifikasi Keniscayaan", "d": "Takdir yang Tak Terelakkan", "c": "#4a4a5a", "o": "Muncul bersama Chronos", "s": "Chronos, personifikasi waktu", "a": "Tidak ada dalam kanon utama", "home": "Melingkung sekeliling dunia", "g": "proto"}, {"n": "Kronos", "e": "Pemimpin Para Titan", "d": "Waktu", "c": "#7a6a3f", "o": "Gaia dan Uranus", "s": "Rhea", "a": "Hestia, Demeter, Hera, Hades, Poseidon, Zeus", "home": "Singgasana langit sebelum digulingkan Zeus", "g": "titan"}, {"n": "Rhea", "e": "Ibu Para Dewa Olympus", "d": "Kesuburan & Keibuan", "c": "#a68a5f", "o": "Gaia dan Uranus", "s": "Kronos", "a": "Hestia, Demeter, Hera, Hades, Poseidon, Zeus", "home": "Olimpus", "g": "titan"}, {"n": "Oceanus", "e": "Titan Samudra Purba", "d": "Sungai Pengelilingi Dunia", "c": "#3f7a94", "o": "Gaia dan Uranus", "s": "Tethys", "a": "Ribu Oceanid dan semua dewa sungai", "home": "Sungai raksasa yang mengalir mengelilingi dunia", "g": "titan"}, {"n": "Tethys", "e": "Titanida Air Tawar", "d": "Sungai & Mata Air", "c": "#5f9ab0", "o": "Gaia dan Uranus", "s": "Oceanus", "a": "Ribu Oceanid dan seluruh sungai air tawar", "home": "Mata air besar yang menghidupi daratan", "g": "titan"}, {"n": "Hyperion", "e": "Titan Cahaya Surgawi", "d": "Cahaya & Pengamatan", "c": "#e0b02f", "o": "Gaia dan Uranus", "s": "Theia", "a": "Helios, Selene, Eos", "home": "Langit tertinggi di atas Olimpus", "g": "titan"}, {"n": "Theia", "e": "Titanida Penglihatan", "d": "Cahaya & Kilauan", "c": "#e3cd93", "o": "Gaia dan Uranus", "s": "Hyperion", "a": "Helios, Selene, Eos", "home": "Kubah langit yang menerangi bumi", "g": "titan"}, {"n": "Coeus", "e": "Titan Kecerdasan", "d": "Akal & Poros Langit", "c": "#6a7a94", "o": "Gaia dan Uranus", "s": "Phoebe", "a": "Leto, Asteria, dan Makar", "home": "Poros langit yang memutar bumi", "g": "titan"}, {"n": "Phoebe", "e": "Titanida Kecemerlangan", "d": "Nubuat & Cahaya Bulan", "c": "#c9b6e0", "o": "Gaia dan Uranus", "s": "Coeus", "a": "Leto, Asteria, dan Philia", "home": "Kuil nubuat di Delphi", "g": "titan"}, {"n": "Crius", "e": "Titan Rasi Bintang", "d": "Konstelasi & Kekuatan Bumi", "c": "#7a6a8a", "o": "Gaia dan Uranus", "s": "Eurybia", "a": "Astraeus", "home": "Bentang langit malam", "g": "titan"}, {"n": "Iapetus", "e": "Titan Kefanaan", "d": "Kematian & Umur Manusia", "c": "#6a5a4a", "o": "Gaia dan Uranus", "s": "Clymene", "a": "Atlas, Prometheus, Epimetheus, Menoetius", "home": "Sisi paling gelap dan terjauh dari cahaya", "g": "titan"}, {"n": "Themis", "e": "Titanida Hukum", "d": "Keadilan & Tata Tertib Ilahi", "c": "#9aa06a", "o": "Gaia dan Uranus", "s": "Zeus", "a": "Horae, Moirai, dan Nephele", "home": "Ruang takhta ilahi tempat ketetapan diumumkan", "g": "titan"}, {"n": "Mnemosyne", "e": "Titanida Ingatan", "d": "Memori & Bahasa", "c": "#8a94b0", "o": "Gaia dan Uranus", "s": "Zeus", "a": "Sembilan Muse", "home": "Sumber ingatan para dewa dan penyair", "g": "titan"}, {"n": "Atlas", "e": "Penopang Langit", "d": "Kekuatan & Ketahanan", "c": "#6a7a8a", "o": "Iapetus dan Clymene", "s": "Persea, atau Phoebe dengan Eunare", "a": "Hesperides, Aloads, Hyas, Dardanus, dan Electra", "home": "Puncak gunung di dunia barat", "g": "turun"}, {"n": "Prometheus", "e": "Pencipta & Sahabat Manusia", "d": "Api & Kecerdikan", "c": "#c98a4f", "o": "Iapetus dan Asia, atau Clymene", "s": "Tidak ada", "a": "Deucalion, Pirithous, dan Pandorus", "home": "Puncak Caucasus yang tersalju", "g": "turun"}, {"n": "Epimetheus", "e": "Saudara Prometheus", "d": "Kecerobohan & Akibat", "c": "#b08a5f", "o": "Iapetus dan Clymene", "s": "Pandora", "a": "Pyrrha, dan sebagian disebut Megara", "home": "Rumah tempat Pandora tinggal", "g": "turun"}, {"n": "Helios", "e": "Dewa Matahari Purba", "d": "Cahaya Siang", "c": "#e0b02f", "o": "Hyperion dan Theia", "s": "Clymene Oceanid", "a": "Phaethon, menurut sebagian penulis", "home": "Kereta yang melintasi langit setiap hari", "g": "turun"}, {"n": "Selene", "e": "Dewi Bulan Purba", "d": "Malam & Cahaya Bulan", "c": "#a9b6d0", "o": "Hyperion dan Theia", "s": "Endymion dalam kisah cinta", "a": "Tidak ada dalam kanon utama", "home": "Kereta perak yang melintasi langit malam", "g": "turun"}, {"n": "Eos", "e": "Dewi Fajar", "d": "Cahaya Pagi", "c": "#e0947a", "o": "Hyperion dan Theia", "s": "Tithonus dalam kisah cinta", "a": "Memnon dengan Tithonus, dan Phaethon dengan Cephalus", "home": "Gerbang langit pada waktu fajar", "g": "turun"}, {"n": "Leto", "e": "Ibu Apollo dan Artemis", "d": "Keibuan & Kesucian", "c": "#a698c9", "o": "Coeus dan Phoebe", "s": "Zeus", "a": "Apollo dan Artemis", "home": "Pulau Delos", "g": "turun"}, {"n": "Maia", "e": "Bidadari Gunung, Ibu Hermes", "d": "Kesuburan & Musim Semi", "c": "#8ab08a", "o": "Atlas", "s": "Zeus secara tersembunyi", "a": "Hermes", "home": "Lereng Gunung Ida di Kreta", "g": "turun"}, {"n": "Zeus", "e": "Raja Para Dewa", "d": "Langit & Petir", "c": "#e0a92f", "o": "Kronos dan Rhea", "s": "Hera", "a": "Ares, Poseidon, Athena, Apollo, Artemis, Hermes, Hephaestus, Dionysus, Persephone, Herakles", "home": "Olimpus", "g": "olymp"}, {"n": "Hera", "e": "Ratu Para Dewa", "d": "Pernikahan & Keluarga", "c": "#b48fd6", "o": "Kronos dan Rhea", "s": "Zeus", "a": "Ares, Athena, Apollo, Artemis, Poseidon, Hermes, Hephaestus, Dionysus, Persephone, Hebe, Eileithyia", "home": "Olimpus", "g": "olymp"}, {"n": "Poseidon", "e": "Penguasa Lautan", "d": "Laut & Gempa Bumi", "c": "#3f8fb0", "o": "Kronos dan Rhea", "s": "Amphitrite", "a": "Triton, Amphitrite, dan banyak Nereid", "home": "Laut", "g": "olymp"}, {"n": "Athena", "e": "Dewi Kebijaksanaan", "d": "Strategi & Kerajinan", "c": "#7fae6f", "o": "Lahir dari kepala Zeus, tanpa ibu", "s": "Tidak menikah", "a": "Tidak ada", "home": "Olimpus", "g": "olymp"}, {"n": "Apollo", "e": "Dewa Matahari & Musik", "d": "Cahaya & Ramalan", "c": "#e0a23f", "o": "Zeus dan Leto", "s": "Tidak menikah dalam kanon utama", "a": "Asklepios, Orpheus, Amphion, Iamos", "home": "Delfi", "g": "olymp"}, {"n": "Artemis", "e": "Dewi Perburuan", "d": "Hutan & Bulan", "c": "#9db6c9", "o": "Zeus dan Leto", "s": "Tidak menikah", "a": "Tidak ada dalam kanon utama", "home": "Hutan; Delos", "g": "olymp"}, {"n": "Ares", "e": "Dewa Perang", "d": "Kekerasan & Pertempuran", "c": "#b04a3f", "o": "Zeus", "s": "Hera", "a": "Phobos, Deimos, Eros", "home": "Olimpus; Trakia", "g": "olymp"}, {"n": "Aphrodite", "e": "Dewi Cinta & Kecantikan", "d": "Cinta & Keindahan", "c": "#d98aa3", "o": "Tidak ada; Lahir dari busa laut", "s": "Hephaestus", "a": "Eros, Anteros, Himeros, Aeneas, Pothos", "home": "Kitera; Olimpus", "g": "olymp"}, {"n": "Hephaestus", "e": "Pandai Besi Para Dewa", "d": "Api & Kerajinan", "c": "#c97a3f", "o": "Hera", "s": "Tidak menikah", "a": "Tidak ada", "home": "Olimpus; Lemnos", "g": "olymp"}, {"n": "Hermes", "e": "Utusan Para Dewa", "d": "Perjalanan & Perdagangan", "c": "#6fae8a", "o": "Zeus dan Maia", "s": "Maia", "a": "Priam, Autolykos, Pandaros", "home": "Olimpus; Arkadia", "g": "olymp"}, {"n": "Demeter", "e": "Dewi Pertanian", "d": "Panen & Kesuburan", "c": "#b89a3f", "o": "Kronos dan Rhea", "s": "Zeus", "a": "Persephone, Aristaeus, Triptolemus", "home": "Olimpus; Eleusis", "g": "olymp"}, {"n": "Dionysus", "e": "Dewa Anggur", "d": "Perayaan & Teater", "c": "#8a5fb0", "o": "Semele, putri Kadmos", "s": "Ariadne, menurut sebagian penulis", "a": "Tidak ada dalam kanon utama", "home": "Olimpus; Naksos", "g": "olymp"}, {"n": "Hestia", "e": "Dewi Perapian", "d": "Rumah Tangga & Perapian Suci", "c": "#d9b96a", "o": "Kronos dan Rhea", "s": "Tidak menikah", "a": "Tidak ada", "home": "Olimpus", "g": "olymp"}, {"n": "Hades", "e": "Penguasa Dunia Bawah", "d": "Kematian & Kekayaan Bumi", "c": "#5a4a6b", "o": "Kronos dan Rhea", "s": "Persefone", "a": "Zerses; Makaria; Melinoe", "home": "Dunia Bawah", "g": "bawah"}, {"n": "Persephone", "e": "Ratu Dunia Bawah", "d": "Musim & Kebangkitan", "c": "#7a5f8a", "o": "Zeus dan Demeter", "s": "Hades", "a": "Zerses; Ploutos", "home": "Dunia Bawah", "g": "bawah"}, {"n": "Thanatos", "e": "Personifikasi Kematian", "d": "Akhir Kehidupan", "c": "#4a4550", "o": "Nyx", "s": "Tidak menikah", "a": "Tidak ada", "home": "Dunia Bawah", "g": "bawah"}, {"n": "Hypnos", "e": "Dewa Tidur", "d": "Mimpi & Istirahat", "c": "#5a5a7a", "o": "Nyx", "s": "Tidak menikah", "a": "Tidak ada", "home": "Dunia Bawah", "g": "bawah"}, {"n": "Charon", "e": "Pengantar Arwah", "d": "Penyeberangan Sungai Styx", "c": "#3a3a3a", "o": "Tidak diketahui", "s": "Tidak menikah", "a": "Tidak ada", "home": "Sungai Stiks", "g": "bawah"}, {"n": "Clotho", "e": "Penanip Benang Kehidupan", "d": "Napas pertama setiap makhluk", "c": "#6a5a7a", "o": "Zeus dan Mnemosyne", "s": "Tidak menikah", "a": "Tidak ada", "home": "Olimpus", "g": "bawah"}, {"n": "Lachesis", "e": "Pengukur Panjang Nasib", "d": "Benang yang menentukan berapa lama hidup", "c": "#5a2a2a", "o": "Zeus dan Mnemosyne", "s": "Tidak menikah", "a": "Tidak ada", "home": "Olimpus", "g": "bawah"}, {"n": "Atropos", "e": "Pemotong Benang", "d": "Akhir hidup yang pasti dan mengikat", "c": "#4a4550", "o": "Zeus dan Mnemosyne", "s": "Tidak menikah", "a": "Tidak ada", "home": "Olimpus", "g": "bawah"}, {"n": "Alecto", "e": "Pembalasan yang Tak Tenangkan", "d": "Hukuman bagi dosa yang tersembunyi", "c": "#5a2a2a", "o": "Nyx", "s": "Tidak menikah", "a": "Tidak ada", "home": "Dunia Bawah", "g": "bawah"}, {"n": "Megaera", "e": "Dewi Pengawas dan Pengakal", "d": "Dendam dan pembiaran atas pengkhianatan", "c": "#5a2a2a", "o": "Nyx", "s": "Tidak menikah", "a": "Tidak ada", "home": "Dunia Bawah", "g": "bawah"}, {"n": "Tisiphone", "e": "Dewi Penuntas dan Penakluk", "d": "Hukuman bagi kezaliman dan perbudakan", "c": "#5a2a2a", "o": "Nyx", "s": "Tidak menikah", "a": "Tidak ada", "home": "Dunia Bawah", "g": "bawah"}, {"n": "Triton", "e": "Utusan Lautan", "d": "Ombak & Gelombang", "c": "#3f7a94", "o": "Amphitrite dan Poseidon", "s": "Amphitrite", "a": "Tidak ada", "home": "Samudra dalam", "g": "laut"}, {"n": "Amphitrite", "e": "Ratu Lautan", "d": "Laut Dalam", "c": "#4f8aa0", "o": "Nereus dan Doris", "s": "Poseidon", "a": "Triton", "home": "Istana bawah laut", "g": "laut"}, {"n": "Nereus", "e": "Lelaki Tua Laut", "d": "Kebijaksanaan & Ramalan Laut", "c": "#3f7a8a", "o": "Pontus dan Gaia", "s": "Doris", "a": "Nereida; Sao", "home": "Samudra luas", "g": "laut"}, {"n": "Proteus", "e": "Dewa Laut Pengubah Wujud", "d": "Perubahan & Ramalan", "c": "#4a8a94", "o": "Poseidon dan Thaia", "s": "Tidak menikah", "a": "Tidak ada", "home": "Samudra dalam; Pulau", "g": "laut"}, {"n": "Phorcys", "e": "Dewa Bahaya Laut Dalam", "d": "Karang & Bahaya Tersembunyi", "c": "#2a5a6a", "o": "Poseidon dan Doris", "s": "Doris", "a": "Nereida; Grue", "home": "Samudra dalam", "g": "laut"}, {"n": "Astraeus", "e": "Titan Bintang", "d": "Bintang & Planet", "c": "#3a3a6a", "o": "Erichthonius dan Gaia", "s": "Tidak menikah", "a": "Bintang; Angin", "home": "Langit malam", "g": "angin"}, {"n": "Boreas", "e": "Dewa Angin Utara", "d": "Angin dingin dan keras dari utara", "c": "#8a7a5a", "o": "Oreithyia dan Poseidon", "s": "Oreithyia", "a": "Zetes; Kalais; Kione", "home": "Lereng gunung Trakia", "g": "angin"}, {"n": "Notus", "e": "Dewa Angin Selatan", "d": "Angin lembap dan gerah dari selatan", "c": "#8a7a5a", "o": "Styks dan Palas", "s": "Tidak menikah", "a": "Tidak ada", "home": "Laut selatan", "g": "angin"}, {"n": "Zephyrus", "e": "Dewa Angin Barat", "d": "Angin lembut dan lembap pembawa bunga", "c": "#8a7a5a", "o": "Harite dan Eurus", "s": "Aura", "a": "Hyakinthos; Krokos", "home": "Lembah barat; Tebing", "g": "angin"}, {"n": "Eurus", "e": "Dewa Angin Timur", "d": "Angin kering dan panas dari timur", "c": "#8a7a5a", "o": "Styks", "s": "Tidak menikah", "a": "Tidak ada", "home": "Laut timur", "g": "angin"}, {"n": "Pan", "e": "Dewa Alam Liar", "d": "Hutan & Gembala", "c": "#7a8a4f", "o": "Hermes dan nimfa Thraka", "s": "Tidak menikah", "a": "Pandea dari Selene", "home": "Pegunungan; Rimba; Padang rumput", "g": "lain"}, {"n": "Eros", "e": "Dewa Cinta Asmara", "d": "Hasrat & Ketertarikan", "c": "#d97a94", "o": "Aphrodite dan Ares", "s": "Tidak menikah", "a": "Psykhe; Sukacita", "home": "Olimpus; Altar; Taman; Debu", "g": "lain"}, {"n": "Nike", "e": "Dewi Kemenangan", "d": "Kejayaan", "c": "#c9a961", "o": "Styx dan Pallas", "s": "Tidak menikah", "a": "Tidak ada", "home": "Olimpus; Arena; Padang perang", "g": "lain"}, {"n": "Iris", "e": "Dewi Pelangi", "d": "Pesan Para Dewa", "c": "#8a6fc9", "o": "Taumas dan Arke", "s": "Tidak menikah", "a": "Tidak ada", "home": "Olimpus; Gerbang langit; Batas atas dunia", "g": "lain"}, {"n": "Hecate", "e": "Dewi Sihir", "d": "Persimpangan & Malam", "c": "#5a4a6b", "o": "Asteria dan Perses", "s": "Tidak menikah", "a": "Tidak ada", "home": "Persimpangan jalan; Kuil; Rawa dan kuburan", "g": "lain"}, {"n": "Nemesis", "e": "Dewi Pembalasan", "d": "Keadilan & Ganjaran", "c": "#7a4a4a", "o": "Okeanos dan Zeus", "s": "Tidak menikah", "a": "Tidak ada", "home": "Rhamnous; Amphikleia; Olimpus", "g": "lain"}, {"n": "Hebe", "e": "Dewi Kemudaan", "d": "Masa Muda Abadi", "c": "#e0a6b0", "o": "Hera dan Zeus", "s": "Herakles", "a": "Eklektros dan Oinomenos", "home": "Olimpus; Ruang jamuan", "g": "lain"}, {"n": "Eileithyia", "e": "Dewi Persalinan", "d": "Kelahiran & Kehamilan", "c": "#c98aa6", "o": "Zeus dan Hera", "s": "Tidak menikah", "a": "Tidak ada dalam kanon utama", "home": "Kuil bersalin; Argos; Samos", "g": "lain"}, {"n": "Tyche", "e": "Dewi Keberuntungan", "d": "Nasib Baik & Kemakmuran Kota", "c": "#c9a961", "o": "Okeanos dan Tethys", "s": "Zeus", "a": "Tidak ada dalam kanon utama", "home": "Olimpus; Jalur takdir", "g": "lain"}, {"n": "Asclepius", "e": "Dewa Pengobatan", "d": "Kesehatan & Penyembuhan", "c": "#7ab08a", "o": "Apollo dan Koronis", "s": "Koronis", "a": "Machaon, Podalirius, dan Iaso", "home": "Rumah; Kuil; Pulau Kos", "g": "lain"}, {"n": "Hygieia", "e": "Dewi Kesehatan", "d": "Kebersihan & Pencegahan Penyakit", "c": "#8ac9a0", "o": "Asclepius", "s": "Tidak menikah", "a": "Tidak ada", "home": "Kuil penyembuh; Sumber air suci", "g": "lain"}, {"n": "Enyo", "e": "Dewi Perang Pendamping Ares", "d": "Kehancuran & Kekacauan Perang", "c": "#8a3a3a", "o": "Ares", "s": "Tidak menikah", "a": "Tidak ada", "home": "Medan perang; Benteng; Kuil Ares", "g": "lain"}, {"n": "Deimos", "e": "Dewa Kengerian", "d": "Kengerian perang yang menimbulkan kepanikan", "c": "#8a7a5a", "o": "Aphrodite dan Ares", "s": "Tidak menikah", "a": "Tidak ada", "home": "Medan perang; Benteng", "g": "lain"}, {"n": "Phobos", "e": "Dewa Ketakutan", "d": "Ketakutan yang melemahkan keberanian", "c": "#8a7a5a", "o": "Aphrodite dan Ares", "s": "Tidak menikah", "a": "Tidak ada", "home": "Medan perang; Barisan lawan", "g": "lain"}, {"n": "Momus", "e": "Dewa Sindiran", "d": "Kritik & Olok-olok", "c": "#7a7a4a", "o": "Nyx", "s": "Tidak menikah", "a": "Tidak ada", "home": "Olimpus", "g": "lain"}, {"n": "Calliope", "e": "Muse Puisi Epik", "d": "Puisi epik dan cerita kepahlawanan", "c": "#a68ac9", "o": "Zeus dan Mnemosyne", "s": "Tidak ada", "a": "Puisi epik", "home": "Gunung Helikon dan lembah Muses", "g": "muse"}, {"n": "Clio", "e": "Muse Sejarah", "d": "Sejarah dan kronik", "c": "#c9a961", "o": "Zeus dan Mnemosyne", "s": "Tidak ada", "a": "Sejarah", "home": "Gunung Helikon dan lembah Muses", "g": "muse"}, {"n": "Erato", "e": "Muse Puisi Cinta", "d": "Puisi cinta dan lirik yang lembut", "c": "#d98aa3", "o": "Zeus dan Mnemosyne", "s": "Tidak ada", "a": "Lir dan puisi cinta", "home": "Gunung Helikon dan lembah Muses", "g": "muse"}, {"n": "Euterpe", "e": "Muse Musik", "d": "Musik dan melodi yang menenangkan", "c": "#8ab08a", "o": "Zeus dan Mnemosyne", "s": "Tidak ada", "a": "Suling dan musik", "home": "Gunung Helikon dan lembah Muses", "g": "muse"}, {"n": "Melpomene", "e": "Muse Tragedi", "d": "Tragedi dan kesedihan yang berat", "c": "#b89a3f", "o": "Zeus dan Mnemosyne", "s": "Tidak ada", "a": "Tragedi dan drama", "home": "Gunung Helikon dan lembah Muses", "g": "muse"}, {"n": "Polyhymnia", "e": "Muse Puisi Suci", "d": "Himne dan puisi khusuk yang suci", "c": "#8a94b0", "o": "Zeus dan Mnemosyne", "s": "Tidak ada", "a": "Sapaan dan syair", "home": "Gunung Helikon dan lembah Muses", "g": "muse"}, {"n": "Terpsichore", "e": "Muse Tari", "d": "Tari dan gerakan yang ekspresif", "c": "#7fae6f", "o": "Zeus dan Mnemosyne", "s": "Tidak ada", "a": "Tari dan tarian", "home": "Gunung Helikon dan lembah Muses", "g": "muse"}, {"n": "Thalia", "e": "Muse Komedi", "d": "Komedi dan pastoral yang gembira", "c": "#d9b96a", "o": "Zeus dan Mnemosyne", "s": "Tidak ada", "a": "Komedi dan tawa", "home": "Gunung Helikon dan lembah Muses", "g": "muse"}, {"n": "Urania", "e": "Muse Astronomi", "d": "Astronomi dan pemetaan bintang", "c": "#6a7a94", "o": "Zeus dan Mnemosyne", "s": "Tidak ada", "a": "Astronomi", "home": "Gunung Helikon dan lembah Muses", "g": "muse"}];
+var GRUPNAMA = {"proto": "Asal Mula", "titan": "Titan Generasi Pertama", "turun": "Keturunan Titan", "olymp": "Dewa-Dewi Olympus", "bawah": "Penguasa Dunia Bawah", "laut": "Dewa-Dewa Laut", "angin": "Angin dan Bintang", "lain": "Dewa dan Personifikasi", "muse": "Sembilan Muse"};
+function nrm(s){ return (s || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim(); }
+function slug(n){ return nrm(n).split(' ').join('-'); }
+function $$(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+function esc(s){ return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+function cariDewa(teks){
+  var t = nrm(teks || '');
+  if(!t) return null;
+  var i, nama, cocok = null, panjang = 0;
+  for(i = 0; i < TREEDATA.length; i++){ if(nrm(TREEDATA[i].n) === t) return TREEDATA[i]; }
+  for(i = 0; i < TREEDATA.length; i++){
+    nama = nrm(TREEDATA[i].n);
+    if(nama && nama.length > 2 && t.indexOf(nama) > -1 && nama.length > panjang){ cocok = TREEDATA[i]; panjang = nama.length; }
+  }
+  return cocok;
+}
+function pecah(val){
+  var out = [], seen = {};
+  (val || '').split(/[,;\/+&]| dan | serta | dengan | atau |\n/).forEach(function(tok){
+    var g = cariDewa(tok);
+    if(g && !seen[g.n]){ seen[g.n] = 1; out.push(g); }
+  });
+  return out;
+}
+var DALAM = {};
+(function(){
+  function hitung(g, jejak){
+    if(DALAM[g.n] != null) return DALAM[g.n];
+    if(jejak[g.n]) return 0;
+    jejak[g.n] = 1;
+    var ortu = pecah(g.o).filter(function(p){ return p !== g; });
+    var d = 0, k;
+    for(k = 0; k < ortu.length; k++) d = Math.max(d, hitung(ortu[k], jejak) + 1);
+    delete jejak[g.n];
+    DALAM[g.n] = d;
+    return d;
+  }
+  TREEDATA.forEach(function(g){ hitung(g, {}); });
+})();
+var MAKS = 0;
+TREEDATA.forEach(function(g){ MAKS = Math.max(MAKS, DALAM[g.n]); });
+function benih(s){ return function(){ s |= 0; s = s + 0x6D2B79F5 | 0; var t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+/* ---------- pohon organik rekursif ---------- */
+var W = 2600, H = 1780, TANAH = 1320, CX = W / 2;
+function tumbuh(rnd, x, y, sudut, pjg, lebar, level, catatUjung, melawanLangit){
+  if(lebar < 1.4 || pjg < 9 || level > 12) { catatUjung.push({ x: x, y: y }); return; }
+  var x2 = x + Math.cos(sudut) * pjg, y2 = y + Math.sin(sudut) * pjg;
+  if(!melawanLangit && (x2 < CX - 950 || x2 > CX + 950)){
+    var kePusat = Math.atan2(-140, CX - x);
+    sudut = (sudut + kePusat) / 2;
+    x2 = x + Math.cos(sudut) * pjg; y2 = y + Math.sin(sudut) * pjg;
+  }
+  var mx = (x + x2) / 2 + (rnd() - 0.5) * 14, my = (y + y2) / 2 + (rnd() - 0.5) * 14;
+  var s = '<path d="M' + x.toFixed(1) + ' ' + y.toFixed(1) + ' Q' + mx.toFixed(1) + ' ' + my.toFixed(1) + ' ' + x2.toFixed(1) + ' ' + y2.toFixed(1)
+    + '" stroke="' + (melawanLangit ? '#241a10' : '#3d2b18') + '" stroke-width="' + lebar.toFixed(1) + '" fill="none" stroke-linecap="round"/>';
+  var anak = 2 + (rnd() < 0.38 ? 1 : 0);
+  for(var i = 0; i < anak; i++){
+    var sebar = 0.32 + rnd() * 0.34;
+    var arah = sudut + (i - (anak - 1) / 2) * sebar + (rnd() - 0.5) * 0.14 - Math.PI / 2 * 0.06 * (melawanLangit ? -1 : 1);
+    if(!melawanLangit) arah = arah * 0.92 + (-Math.PI / 2) * 0.08;
+    s += tumbuh(rnd, x2, y2, arah, pjg * (0.68 + rnd() * 0.12), lebar * (0.58 + rnd() * 0.1), level + 1, catatUjung, melawanLangit);
+  }
+  return s;
+}
+function bangun(){
+  var rnd = benih(20260926), s = '', i;
+  /* langit sudah CSS; siluet hutan jauh */
+  s += '<defs><filter id="kabur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="9"/></filter>'
+    + '<radialGradient id="tanahGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="rgba(212,175,55,.22)"/><stop offset="1" stop-color="rgba(212,175,55,0)"/></radialGradient></defs>';
+  var h1 = [], h2 = [];
+  s += '<g filter="url(#kabur)" opacity=".75">' + tumbuh(benih(7), CX - 780, TANAH + 40, -Math.PI / 2, 120, 34, 0, h1, false) + '</g>';
+  s += '<g filter="url(#kabur)" opacity=".75">' + tumbuh(benih(21), CX + 800, TANAH + 40, -Math.PI / 2, 110, 30, 0, h2, false) + '</g>';
+  /* tanah */
+  s += '<ellipse cx="' + CX + '" cy="' + (TANAH + 230) + '" rx="' + (W / 2) + '" ry="200" fill="#060905"/>';
+  s += '<ellipse cx="' + CX + '" cy="' + TANAH + '" rx="' + (W / 2) + '" ry="64" fill="#0c110a"/>';
+  s += '<ellipse cx="' + CX + '" cy="' + TANAH + '" rx="260" ry="44" fill="url(#tanahGlow)"/>';
+  s += '<text x="' + CX + '" y="' + (TANAH + 10) + '" text-anchor="middle" font-size="15" letter-spacing="8" fill="rgba(212,175,55,.4)" font-family="Cinzel,serif">D U N I A &nbsp; F A N A</text>';
+  s += '<text x="' + CX + '" y="' + (TANAH + 130) + '" text-anchor="middle" font-size="15" letter-spacing="8" fill="rgba(160,95,95,.5)" font-family="Cinzel,serif">A K A R &nbsp; P U R B A</text>';
+  /* akar */
+  var ujungAkar = [];
+  for(i = 0; i < 7; i++){
+    var a0 = Math.PI * (0.12 + 0.76 * i / 6);
+    s += tumbuh(rnd, CX, TANAH + 6, a0, 90, 17 - i % 3 * 3, 0, ujungAkar, true);
+  }
+  /* tajuk */
+  var ujung = [];
+  s += '<g class="tajuk-goyang">' + tumbuh(rnd, CX, TANAH, -Math.PI / 2, 250, 64, 0, ujung, false);
+  /* dedaunan di sekitar ujung */
+  var hijau = ['#2e4a2a', '#3d5a2e', '#4a5a28', '#6b5a2a', '#54682e', '#775522'];
+  var daun = '';
+  ujung.forEach(function(u, k){
+    if(k % 2) return;
+    var n = 1 + Math.floor(rnd() * 2);
+    for(var j = 0; j < n; j++){
+      var lx = u.x + (rnd() - 0.5) * 90, ly = u.y + (rnd() - 0.5) * 80;
+      if(ly > TANAH - 60) return;
+      var vsz = 8 + rnd() * 10;
+      var gy = rnd() > 0.72 ? ' class="daun-goyang" style="animation-delay:-' + (rnd() * 6).toFixed(1) + 's"' : '';
+      daun += '<ellipse cx="' + lx.toFixed(0) + '" cy="' + ly.toFixed(0) + '" rx="' + vsz.toFixed(0) + '" ry="' + (vsz * 0.55).toFixed(0)
+        + '" fill="' + hijau[Math.floor(rnd() * hijau.length)] + '" opacity="' + (0.35 + rnd() * 0.5).toFixed(2)
+        + '" transform="rotate(' + (rnd() * 180).toFixed(0) + ' ' + lx.toFixed(0) + ' ' + ly.toFixed(0) + '"' + gy + '/>';
+    }
+  });
+  s += daun;
+  /* buah: petakan generasi ke ujung ranting */
+  var atas = TREEDATA.filter(function(g){ return DALAM[g.n] >= 2; })
+    .sort(function(a, b){ return DALAM[b.n] - DALAM[a.n] || (a.n < b.n ? -1 : 1); });
+  var ujungUrut = ujung.slice().sort(function(a, b){ return a.y - b.y; });
+  var langkah = Math.max(1, Math.floor(ujungUrut.length / Math.max(1, atas.length)));
+  atas.forEach(function(g, k){
+    var u = ujungUrut[(k * langkah) % ujungUrut.length];
+    g._x = u.x; g._y = u.y;
+  });
+  /* buah akar purba */
+  var bawah = TREEDATA.filter(function(g){ return DALAM[g.n] < 2; })
+    .sort(function(a, b){ return DALAM[a.n] - DALAM[b.n] || (a.n < b.n ? -1 : 1); });
+  var akarUrut = ujungAkar.slice().sort(function(a, b){ return b.y - a.y; });
+  var langkahA = Math.max(1, Math.floor(akarUrut.length / Math.max(1, bawah.length)));
+  bawah.forEach(function(g, k){
+    var u = akarUrut[(k * langkahA) % akarUrut.length] || { x: CX, y: TANAH + 100 };
+    g._x = u.x; g._y = u.y;
+  });
+  TREEDATA.forEach(function(g, gi){
+    var nama = g.n.length > 14 ? g.n.slice(0, 13) + '…' : g.n;
+    s += '<g class="buah" data-n="' + esc(g.n) + '" style="color:' + g.c + '" tabindex="0" role="button" aria-label="Buah ' + esc(g.n) + '">'
+      + '<line x1="' + g._x.toFixed(0) + '" y1="' + (g._y - 10).toFixed(0) + '" x2="' + g._x.toFixed(0) + '" y2="' + (g._y - 2).toFixed(0) + '" stroke="#4a5a28" stroke-width="2"/>'
+      + '<circle class="cahaya" cx="' + g._x.toFixed(0) + '" cy="' + g._y.toFixed(0) + '" r="21" fill="' + g.c + '" style="animation-delay:-' + (gi % 4) + 's"/>'
+      + '<circle class="halo" cx="' + g._x.toFixed(0) + '" cy="' + g._y.toFixed(0) + '" r="11" fill="#0b1020" stroke="' + g.c + '" stroke-width="2.5"/>'
+      + '<text x="' + g._x.toFixed(0) + '" y="' + (g._y + 32).toFixed(0) + '" text-anchor="middle" font-size="12.5">' + esc(nama) + '</text></g>';
+  });
+  s += '</g>';
+  document.getElementById('pohonZoom').innerHTML = '<svg id="pohonSvg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="Pohon kehidupan dewa">' + s + '</svg>';
+  document.getElementById('ringkas').textContent = TREEDATA.length + ' dewa · ' + (MAKS + 1) + ' generasi · dari akar Chaos hingga tajuk Olimpus';
+  var tip = document.getElementById('tip');
+  $$('.buah').forEach(function(b){
+    function pilih(){ bukaPanel(b.getAttribute('data-n')); }
+    b.addEventListener('click', pilih);
+    b.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); pilih(); } });
+    b.addEventListener('pointerenter', function(e){
+      var g = null, i;
+      for(i = 0; i < TREEDATA.length; i++){ if(TREEDATA[i].n === b.getAttribute('data-n')) g = TREEDATA[i]; }
+      if(!g) return;
+      tip.querySelector('b').textContent = g.n;
+      tip.querySelector('span').textContent = g.e;
+      tip.style.display = 'block';
+    });
+    b.addEventListener('pointermove', function(e){
+      tip.style.left = Math.min(innerWidth - 250, e.clientX + 16) + 'px';
+      tip.style.top = (e.clientY + 18) + 'px';
+    });
+    b.addEventListener('pointerleave', function(){ tip.style.display = 'none'; });
+  });
+}
+function bukaPanel(nama){
+  var g = null, i;
+  for(i = 0; i < TREEDATA.length; i++){ if(TREEDATA[i].n === nama) g = TREEDATA[i]; }
+  if(!g) return;
+  $$('.buah.pilih').forEach(function(b){ b.classList.remove('pilih'); });
+  var nd = document.querySelector('.buah[data-n="' + nama.replace(/"/g, '') + '"]');
+  if(nd) nd.classList.add('pilih');
+  var ortu = pecah(g.o), anak = pecah(g.a);
+  var h = '<h2><span style="color:' + g.c + '">●</span> ' + esc(g.n) + '</h2>'
+    + '<p class="ep">' + esc(g.e) + '</p><p class="rn">' + esc(g.d) + ' · Generasi ke-' + (DALAM[g.n] + 1) + ' · ' + esc(GRUPNAMA[g.g] || '') + '</p>'
+    + '<dl><div><dt>Tempat</dt><dd>' + esc(g.home) + '</dd></div>'
+    + '<div><dt>Pasangan</dt><dd>' + esc(g.s) + '</dd></div>'
+    + (ortu.length ? '<div><dt>Orang tua</dt><dd><div class="kerabat">' + ortu.map(function(p){ return '<span data-n="' + esc(p.n) + '">' + esc(p.n) + '</span>'; }).join('') + '</div></dd></div>' : '')
+    + (anak.length ? '<div><dt>Anak</dt><dd><div class="kerabat">' + anak.slice(0, 12).map(function(p){ return '<span data-n="' + esc(p.n) + '">' + esc(p.n) + '</span>'; }).join('') + '</div></dd></div>' : '')
+    + '</dl><a class="kisah" href="Panteon — Ensiklopedia Dewa-Dewi Yunani.html#dewa=' + slug(g.n) + '">Baca kisah lengkap →</a>';
+  document.getElementById('panelIsi').innerHTML = h;
+  document.getElementById('panel').hidden = false;
+  document.getElementById('tip').style.display = 'none';
+  $$('#panelIsi .kerabat span').forEach(function(sp){
+    sp.addEventListener('click', function(){ lompat(sp.getAttribute('data-n')); });
+  });
+}
+function lompat(nama){
+  bukaPanel(nama);
+  var nd = document.querySelector('.buah[data-n="' + nama.replace(/"/g, '') + '"]');
+  if(!nd) return;
+  try{
+    var r = nd.getBoundingClientRect(), gr = document.getElementById('gulung').getBoundingClientRect();
+    document.getElementById('gulung').scrollBy({ left: r.left - gr.left - gr.width / 2, top: r.top - gr.top - gr.height / 2, behavior: 'smooth' });
+  }catch(e){}
+}
+document.getElementById('panelTutup').addEventListener('click', function(){
+  document.getElementById('panel').hidden = true;
+  $$('.buah.pilih').forEach(function(b){ b.classList.remove('pilih'); });
+});
+document.getElementById('tglNama').addEventListener('change', function(){
+  document.body.classList.toggle('tampil-nama', this.checked);
+});
+document.getElementById('qcari').addEventListener('keydown', function(e){
+  if(e.key !== 'Enter') return;
+  var q = nrm(this.value);
+  if(!q) return;
+  for(var i = 0; i < TREEDATA.length; i++){
+    if(nrm(TREEDATA[i].n).indexOf(q) > -1){ lompat(TREEDATA[i].n); return; }
+  }
+});
+var skala = 1;
+function terapkanZoom(){ document.getElementById('pohonZoom').style.transform = 'scale(' + skala + ')'; }
+document.getElementById('zIn').addEventListener('click', function(){ skala = Math.min(1.6, skala + 0.15); terapkanZoom(); });
+document.getElementById('zOut').addEventListener('click', function(){ skala = Math.max(0.5, skala - 0.15); terapkanZoom(); });
+document.getElementById('zReset').addEventListener('click', function(){ skala = 1; terapkanZoom(); });
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var c = document.getElementById('kunang'), x = c.getContext('2d'), arr = [], i;
+  function atur(){
+    c.width = innerWidth; c.height = innerHeight;
+    arr = [];
+    for(i = 0; i < 46; i++) arr.push({ x: Math.random() * c.width, y: Math.random() * c.height,
+      r: 0.6 + Math.random() * 1.6, vy: 0.08 + Math.random() * 0.3, ph: Math.random() * 6.28, sp: 0.01 + Math.random() * 0.03 });
+  }
+  atur();
+  addEventListener('resize', atur);
+  (function loop(){
+    requestAnimationFrame(loop);
+    x.clearRect(0, 0, c.width, c.height);
+    for(i = 0; i < arr.length; i++){
+      var p = arr[i];
+      p.y -= p.vy; p.ph += p.sp;
+      if(p.y < -8){ p.y = c.height + 8; p.x = Math.random() * c.width; }
+      var tw = 0.25 + 0.55 * (0.5 + 0.5 * Math.sin(p.ph * 2));
+      x.beginPath(); x.arc(p.x, p.y, p.r, 0, 6.2832);
+      x.fillStyle = 'rgba(240,220,160,' + tw.toFixed(3) + ')';
+      x.fill();
+    }
+  })();
+})();
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var emo = ['🍂', '🍃', '✨'];
+  for(var i = 0; i < 8; i++){
+    var s = document.createElement('span');
+    s.className = 'gugur';
+    s.textContent = emo[i % emo.length];
+    s.style.left = (3 + Math.random() * 94) + 'vw';
+    s.style.animationDuration = (11 + Math.random() * 10).toFixed(1) + 's';
+    s.style.animationDelay = (-Math.random() * 14).toFixed(1) + 's';
+    s.style.fontSize = (14 + Math.random() * 12).toFixed(0) + 'px';
+    document.body.appendChild(s);
+  }
+})();
+bangun();
+</script>
+</body>
+</html>
