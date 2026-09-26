@@ -924,7 +924,7 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
       <span class="count" id="count"></span>
       <a class="btn" id="zodiakBtn" href="Rasi Bintang — Zodiak Yunani.html" title="Buka halaman rasi bintang">✦ Rasi Bintang</a>
       <button class="btn" id="petaBtn" title="Jelajahi peta dunia mitologi">🗺 Peta</button>
-      <button class="btn" id="pohonBtn" title="Pohon kehidupan seluruh dewa">🌳 Pohon</button>
+      <a class="btn" id="pohonBtn" href="Pohon Kehidupan — Pohon Dewa.html" title="Pohon kehidupan seluruh 88 dewa">🌳 Pohon Dewa</a>
       <button class="btn" id="linaBtn" title="Linimasa kosmogoni Yunani">📜 Linimasa</button>
       <button class="btn icon" id="randBtn" title="Buka dewa acak" aria-label="Buka dewa acak">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
@@ -1573,7 +1573,7 @@ function init(){
   });
   applyFilter('');
   var phb = $('#pohonBtn');
-  if(phb) phb.addEventListener('click', bukaPohon);
+  // pohonBtn navigates directly to Pohon Kehidupan — Pohon Dewa.html
   $('#pohonClose').addEventListener('click', function(){ tutupJx(); });
   $('#pohonScrim').addEventListener('click', function(){ tutupJx(); });
   var pb = $('#petaBtn');
@@ -2112,6 +2112,7 @@ function openModal(it){
         '<div class="block"><h4>Simbol dan Lambang</h4><div class="chipsym">' + sym + '</div></div>' +
         (facts ? '<div class="block"><h4>Fakta Menarik</h4><ul class="facts">' + facts + '</ul></div>' : '') +
         '<div class="block"><h4>Ranah</h4><div class="chipsym"><span>' + it.d + '</span></div></div>' +
+        '<div class="block" style="margin-top:20px"><a class="btn" style="display:inline-flex; width:100%; justify-content:center; gap:8px; padding:12px; font-weight:600; background:linear-gradient(135deg,rgba(212,175,55,.25),rgba(212,175,55,.08)); border-color:var(--line-2);" href="Pohon Kehidupan — Pohon Dewa.html#dewa=' + encodeURIComponent(it.n) + '" title="Temukan ' + it.n + ' di Pohon Kehidupan">🌳 Jelajahi ' + it.n + ' di Pohon Kehidupan →</a></div>' +
         '<nav class="sheet-nav">' +
           '<button id="navPrev"' + (prev ? '' : ' disabled') + '>← ' + (prev ? prev.n : 'Awal') + '</button>' +
           '<span class="pos">' + (i + 1) + ' / ' + FLAT.length + '</span>' +
