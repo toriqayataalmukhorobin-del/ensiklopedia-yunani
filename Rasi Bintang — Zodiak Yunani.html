@@ -728,6 +728,17 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
 @keyframes garisRasi{ to{stroke-dashoffset:-24} }
 @media (prefers-reduced-motion:reduce){ .card:hover .zimg path{animation:none} }
 
+
+/* ---------- Kilat alam + rasi melayang ---------- */
+#alamFlash{position:fixed; inset:0; z-index:55; pointer-events:none; opacity:0}
+#alamFlash.kila{animation:kilatAlam .7s ease-out both}
+@keyframes kilatAlam{ 0%{opacity:0} 25%{opacity:.3} 100%{opacity:0} }
+#dewaMelayang{position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden}
+.melayang{position:absolute; opacity:.12; pointer-events:none; animation:melayangApung linear infinite alternate}
+.melayang svg{width:100%; height:100%}
+@keyframes melayangApung{ from{transform:translateY(26px) rotate(-5deg)} to{transform:translateY(-56px) rotate(6deg)} }
+@media (prefers-reduced-motion:reduce){ .melayang,#alamFlash.kila{animation:none !important} }
+
 </style>
 </head>
 <body>
@@ -758,6 +769,7 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
 <div id="rays" aria-hidden="true"></div>
 <div id="sinar" aria-hidden="true"></div>
 <div id="cakra" aria-hidden="true"></div>
+<div id="alamFlash" aria-hidden="true"></div>
 <div class="vignette" aria-hidden="true"></div>
 <div class="grain"></div>
 <div id="burst" aria-hidden="true"></div>
@@ -801,6 +813,7 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
       <span class="stat"><b>4</b>Unsur</span>
       <span class="stat"><b>3.000+</b>Tahun kisah</span>
     </div>
+    <div id="dewaMelayang" aria-hidden="true"></div>
     <div class="scrollHint" aria-hidden="true"><span>Gulir ke dunia para dewa</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></div>
     <svg id="temple" viewBox="0 0 1200 190" aria-hidden="true">
       <g fill="#080b16" stroke="#c9a961" stroke-width="1.1" stroke-opacity=".45">
@@ -1333,6 +1346,36 @@ function hitungKalk(){
   h.hidden = false;
   $('#kalkLihat').addEventListener('click', function(){ tutupKalk(); openZ(z); });
 }
+function alamFlash(warna){
+  if(!warna) return;
+  try{
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var f = document.getElementById('alamFlash');
+    if(!f) return;
+    f.style.background = 'radial-gradient(70% 60% at 50% 45%, ' + warna + ', transparent 70%)';
+    f.classList.remove('kila'); void f.offsetWidth; f.classList.add('kila');
+  }catch(e){}
+}
+function tumbuhRasi(){
+  try{
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var host = document.getElementById('dewaMelayang');
+    if(!host || host.children.length) return;
+    for(var i = 0; i < 6; i++){
+      var z = ZDATA[(i * 2 + 1) % ZDATA.length];
+      var s = document.createElement('span');
+      s.className = 'melayang';
+      s.innerHTML = rasiSVG(z, 'fly' + i, false);
+      var sz = 90 + Math.round(Math.random() * 70);
+      s.style.width = sz + 'px'; s.style.height = (sz * 0.85) + 'px';
+      s.style.left = (2 + Math.random() * 88) + '%';
+      s.style.top = (4 + Math.random() * 60) + '%';
+      s.style.animationDuration = (13 + Math.random() * 12).toFixed(1) + 's';
+      s.style.animationDelay = (-Math.random() * 14).toFixed(1) + 's';
+      host.appendChild(s);
+    }
+  }catch(e){}
+}
 function step(dir){
   if(!cur) return;
   var i = ZDATA.indexOf(cur) + dir;
@@ -1496,6 +1539,7 @@ function ledakan(x, y, warna){
       && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.body.classList.add('tilt3d');
     FX.kursor(); FX.magnet(); FX.jejak(); FX.hitung(); FX.heroParallax();
     Langit.start();
+    try{ tumbuhRasi(); }catch(e){}
     var __r = render;
     render = function(){
       __r();
@@ -1514,6 +1558,7 @@ function ledakan(x, y, warna){
         var el = document.activeElement;
         var r = el && el.getBoundingClientRect ? el.getBoundingClientRect() : null;
         if(r) ledakan(r.left + r.width/2, r.top + r.height/2, (WARNA_UNSUR[z.unsur]||'#d4af37'));
+      try{ alamFlash(WARNA_UNSUR[z.unsur]||'#d4af37'); }catch(e){}
       }catch(e){}
       __o(z);
       try{

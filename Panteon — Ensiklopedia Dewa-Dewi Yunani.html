@@ -751,6 +751,36 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
   .modal.open .sheet::before{animation:none !important}
 }
 
+
+/* ---------- Pohon Kehidupan ---------- */
+.pohon-wrap{overflow:auto; max-height:62vh; border:1px solid var(--line); border-radius:14px; scrollbar-width:thin;
+  background:radial-gradient(700px 260px at 50% 0%, rgba(212,175,55,.07), transparent 70%)}
+.pohon-wrap svg{display:block; min-width:680px; width:max-content; height:auto}
+.pnode{cursor:pointer}
+.pnode rect{fill:rgba(255,255,255,.05); stroke:var(--line-2); stroke-width:1.2}
+.pnode text{font-family:var(--ff-d); font-size:11.5px; fill:var(--marble)}
+.pnode:hover rect,.pnode:focus rect{stroke:var(--gold-2); fill:rgba(212,175,55,.16); filter:drop-shadow(0 0 8px rgba(212,175,55,.5))}
+.plink{fill:none; stroke:rgba(212,175,55,.35); stroke-width:1.2}
+.pnode,.plink{transition:opacity .25s ease}
+.redup{opacity:.12}
+/* ---------- Kilat alam saat kartu diklik ---------- */
+#alamFlash{position:fixed; inset:0; z-index:55; pointer-events:none; opacity:0}
+#alamFlash.kila{animation:kilatAlam .7s ease-out both}
+@keyframes kilatAlam{ 0%{opacity:0} 25%{opacity:.3} 100%{opacity:0} }
+/* ---------- Medali dewa melayang di hero ---------- */
+#dewaMelayang{position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden}
+.melayang{position:absolute; opacity:.1; pointer-events:none; animation:melayangApung linear infinite alternate}
+.melayang svg{width:100%; height:100%}
+@keyframes melayangApung{ from{transform:translateY(26px) rotate(-5deg)} to{transform:translateY(-56px) rotate(6deg)} }
+/* ---------- Tint cahaya per kelompok ---------- */
+.group{position:relative}
+.group::after{content:""; position:absolute; inset:-10px 0; pointer-events:none;
+  background:radial-gradient(640px 220px at 50% 0%, color-mix(in srgb, var(--gc,#d4af37) 9%, transparent), transparent 70%)}
+@media (prefers-reduced-motion:reduce){
+  .melayang,#alamFlash.kila{animation:none !important}
+  .pnode,.plink{transition:none}
+}
+
 </style>
 </head>
 <body>
@@ -782,6 +812,7 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
 <div id="rays" aria-hidden="true"></div>
 <div id="sinar" aria-hidden="true"></div>
 <div id="cakra" aria-hidden="true"></div>
+<div id="alamFlash" aria-hidden="true"></div>
 <div class="vignette" aria-hidden="true"></div>
 <div class="grain"></div>
 <div id="burst" aria-hidden="true"></div>
@@ -857,6 +888,7 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
       <span class="stat"><b id="sSim">0</b>Simbol</span>
       <span class="stat"><b>6.000+</b>Tahun kisah</span>
     </div>
+    <div id="dewaMelayang" aria-hidden="true"></div>
     <div class="scrollHint" aria-hidden="true"><span>Gulir ke dunia para dewa</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></div>
     <svg id="temple" viewBox="0 0 1200 190" aria-hidden="true">
       <g fill="#080b16" stroke="#c9a961" stroke-width="1.1" stroke-opacity=".45">
@@ -892,6 +924,7 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
       <span class="count" id="count"></span>
       <a class="btn" id="zodiakBtn" href="Rasi Bintang — Zodiak Yunani.html" title="Buka halaman rasi bintang">✦ Rasi Bintang</a>
       <button class="btn" id="petaBtn" title="Jelajahi peta dunia mitologi">🗺 Peta</button>
+      <button class="btn" id="pohonBtn" title="Pohon kehidupan seluruh dewa">🌳 Pohon</button>
       <button class="btn" id="linaBtn" title="Linimasa kosmogoni Yunani">📜 Linimasa</button>
       <button class="btn icon" id="randBtn" title="Buka dewa acak" aria-label="Buka dewa acak">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
@@ -923,6 +956,15 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6"/><path d="M5 12l7-7 7 7"/></svg>
 </button>
 
+<div class="jx" id="pohonJx" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="pohonTitle">
+  <div class="scrim" id="pohonScrim"></div>
+  <div class="jx-box" style="width:min(1200px,100%)">
+    <button class="close" id="pohonClose" aria-label="Tutup">×</button>
+    <h3 id="pohonTitle">Pohon Kehidupan Dewa</h3>
+    <p class="jx-sub">Dari Chaos hingga generasi Olimpus. Arahkan kursor untuk menelusuri garis keturunan, ketuk simpul untuk membuka kisah.</p>
+    <div class="pohon-wrap" id="pohonWrap"></div>
+  </div>
+</div>
 <div class="jx" id="petaJx" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="petaTitle">
   <div class="scrim" id="petaScrim"></div>
   <div class="jx-box">
@@ -1516,6 +1558,10 @@ function init(){
     }
   });
   applyFilter('');
+  var phb = $('#pohonBtn');
+  if(phb) phb.addEventListener('click', bukaPohon);
+  $('#pohonClose').addEventListener('click', function(){ tutupJx(); });
+  $('#pohonScrim').addEventListener('click', function(){ tutupJx(); });
   var pb = $('#petaBtn');
   if(pb) pb.addEventListener('click', bukaPeta);
   var lb = $('#linaBtn');
@@ -1626,6 +1672,7 @@ function render(){
     card.setAttribute('aria-label', it.n + ', ' + it.e);
     card.addEventListener('click', function(e){
       ledakan(e.clientX, e.clientY, it.c);
+      alamFlash(it.c);
       Realam.set(it.grp.k);
       openModal(it);
     });
@@ -1880,6 +1927,132 @@ function tutupJx(diam){
 }
 function bukaPeta(){ renderPeta(); bukaJx('#petaJx'); }
 function bukaLina(){ renderLina(); bukaJx('#linaJx'); }
+function alamFlash(warna){
+  if(!warna) return;
+  try{
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var f = document.getElementById('alamFlash');
+    if(!f) return;
+    f.style.background = 'radial-gradient(70% 60% at 50% 45%, ' + warna + ', transparent 70%)';
+    f.classList.remove('kila'); void f.offsetWidth; f.classList.add('kila');
+  }catch(e){}
+}
+/* ===== Pohon Kehidupan seluruh dewa ===== */
+var PohonCache = null;
+function dataPohon(){
+  if(PohonCache) return PohonCache;
+  var anak = {};
+  FLAT.forEach(function(g){ anak[g.n] = []; });
+  FLAT.forEach(function(g){
+    pecahKerabat(g.o).forEach(function(p){
+      if(p !== g && anak[p.n]) anak[p.n].push(g);
+    });
+  });
+  var dalam = {};
+  function hitung(g, jejak){
+    if(dalam[g.n] != null) return dalam[g.n];
+    if(jejak[g.n]) return 0;
+    jejak[g.n] = 1;
+    var ortu = pecahKerabat(g.o).filter(function(p){ return p !== g; });
+    var d = 0, k;
+    for(k = 0; k < ortu.length; k++) d = Math.max(d, hitung(ortu[k], jejak) + 1);
+    delete jejak[g.n];
+    dalam[g.n] = d;
+    return d;
+  }
+  FLAT.forEach(function(g){ hitung(g, {}); });
+  var maks = 0;
+  FLAT.forEach(function(g){ maks = Math.max(maks, dalam[g.n]); });
+  PohonCache = { anak: anak, dalam: dalam, maks: maks };
+  return PohonCache;
+}
+function renderPohon(){
+  var D = dataPohon(), W = 128, H = 36, GAPX = 14, GAPY = 64;
+  var lapis = [];
+  FLAT.forEach(function(g){ (lapis[D.dalam[g.n]] = lapis[D.dalam[g.n]] || []).push(g); });
+  var lebar = 40;
+  lapis.forEach(function(arr){ lebar = Math.max(lebar, arr.length * (W + GAPX) + 40); });
+  var pos = {}, s = '';
+  lapis.forEach(function(arr, li){
+    var awal = (lebar - arr.length * (W + GAPX) + GAPX) / 2;
+    arr.forEach(function(g, k){
+      pos[g.n] = { x: awal + k * (W + GAPX) + W / 2, y: 30 + li * (H + GAPY) };
+    });
+  });
+  FLAT.forEach(function(g){
+    var p0 = pos[g.n];
+    pecahKerabat(g.o).forEach(function(p){
+      if(p === g || !pos[p.n]) return;
+      var p1 = pos[p.n];
+      s += '<path class="plink" data-dari="' + escT(p.n) + '" data-ke="' + escT(g.n)
+        + '" d="M' + p1.x + ' ' + (p1.y + H / 2) + ' C' + p1.x + ' ' + (p1.y + H / 2 + 24) + ' '
+        + p0.x + ' ' + (p0.y - H / 2 - 24) + ' ' + p0.x + ' ' + (p0.y - H / 2) + '"/>';
+    });
+  });
+  FLAT.forEach(function(g){
+    var p0 = pos[g.n];
+    var nama = g.n.length > 13 ? g.n.slice(0, 12) + '…' : g.n;
+    s += '<g class="pnode" data-n="' + escT(g.n) + '" tabindex="0" role="button" aria-label="Buka ' + escT(g.n) + '">'
+      + '<rect x="' + (p0.x - W / 2) + '" y="' + (p0.y - H / 2) + '" width="' + W + '" height="' + H + '" rx="18" style="--c:' + g.c + '"/>'
+      + '<circle cx="' + (p0.x - W / 2 + 18) + '" cy="' + p0.y + '" r="9" fill="' + g.c + '"/>'
+      + '<text x="' + (p0.x + 8) + '" y="' + (p0.y + 4) + '">' + escT(nama) + '</text></g>';
+  });
+  var tinggi = 40 + (D.maks + 1) * (H + GAPY);
+  $('#pohonWrap').innerHTML = '<svg viewBox="0 0 ' + lebar + ' ' + tinggi + '" width="' + lebar + '" height="' + tinggi + '" role="img" aria-label="Pohon kehidupan dewa">' + s + '</svg>';
+  function byN(n){ for(var k = 0; k < FLAT.length; k++) if(FLAT[k].n === n) return FLAT[k]; return null; }
+  function kerabat(nama){
+    var set = {};
+    set[nama] = 1;
+    var tump = [byN(nama)], c, i;
+    while(tump.length){
+      c = tump.pop(); if(!c) continue;
+      pecahKerabat(c.o).forEach(function(p){ if(!set[p.n]){ set[p.n] = 1; tump.push(p); } });
+    }
+    var t2 = [nama];
+    while(t2.length){
+      var cn = t2.pop();
+      (D.anak[cn] || []).forEach(function(ch){ if(!set[ch.n]){ set[ch.n] = 1; t2.push(ch.n); } });
+    }
+    return set;
+  }
+  $$('#pohonWrap .pnode').forEach(function(nd){
+    function buka(){
+      var g = byN(nd.getAttribute('data-n'));
+      tutupJx(); if(g) openModal(g);
+    }
+    nd.addEventListener('click', buka);
+    nd.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); buka(); } });
+    nd.addEventListener('pointerenter', function(){
+      var set = kerabat(nd.getAttribute('data-n'));
+      $$('#pohonWrap .pnode').forEach(function(o){ o.classList.toggle('redup', !set[o.getAttribute('data-n')]); });
+      $$('#pohonWrap .plink').forEach(function(l){ l.classList.toggle('redup', !(set[l.getAttribute('data-dari')] && set[l.getAttribute('data-ke')])); });
+    });
+  });
+  document.getElementById('pohonWrap').addEventListener('pointerleave', function(){
+    $$('#pohonWrap .redup').forEach(function(o){ o.classList.remove('redup'); });
+  });
+}
+function bukaPohon(){ renderPohon(); bukaJx('#pohonJx'); }
+function tumbuhMelayang(){
+  try{
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var host = document.getElementById('dewaMelayang');
+    if(!host || host.children.length) return;
+    for(var i = 0; i < 8; i++){
+      var g = FLAT[(i * 11 + 3) % FLAT.length];
+      var s = document.createElement('span');
+      s.className = 'melayang';
+      s.innerHTML = medal(g, 'fly' + i);
+      var sz = 60 + Math.round(Math.random() * 70);
+      s.style.width = sz + 'px'; s.style.height = sz + 'px';
+      s.style.left = (2 + Math.random() * 90) + '%';
+      s.style.top = (4 + Math.random() * 62) + '%';
+      s.style.animationDuration = (13 + Math.random() * 12).toFixed(1) + 's';
+      s.style.animationDelay = (-Math.random() * 14).toFixed(1) + 's';
+      host.appendChild(s);
+    }
+  }catch(e){}
+}
 /* ---------- modal ---------- */
 var cur = null;
 function openModal(it){
@@ -2570,6 +2743,7 @@ Langit.start();
 Parallax.start();
 init();
 Gerbang.start();
+try{ tumbuhMelayang(); }catch(e){}
 </script>
 </body>
 </html>
