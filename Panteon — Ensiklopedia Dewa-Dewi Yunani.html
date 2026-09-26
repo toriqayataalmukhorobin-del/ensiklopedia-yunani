@@ -678,6 +678,52 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
 .sib-label{font-family:var(--ff-d); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin:14px 0 2px}
 @media (prefers-reduced-motion:reduce){.tnode rect,.sib-row span{transition:none}}
 
+
+/* ---------- Jelajah: Peta & Linimasa ---------- */
+.jx{position:fixed; inset:0; z-index:60; display:grid; place-items:center; padding:20px; visibility:hidden}
+.jx.open{visibility:visible}
+.jx .scrim{position:absolute; inset:0; background:rgba(3,5,12,.78); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); opacity:0; transition:opacity .4s ease}
+.jx.open .scrim{opacity:1}
+.jx-box{
+  position:relative; width:min(1020px,100%); max-height:min(90vh,860px); overflow:hidden auto;
+  border-radius:22px; border:1px solid var(--line-2);
+  background:linear-gradient(180deg,var(--card-2),var(--card)); box-shadow:var(--shadow);
+  padding:30px 30px 28px; scrollbar-width:thin;
+  opacity:0; transform:translateY(22px) scale(.98); transition:opacity .4s ease, transform .5s cubic-bezier(.19,1,.22,1);
+}
+.jx.open .jx-box{opacity:1; transform:none; animation:sheetPop .55s cubic-bezier(.2,1.25,.3,1) both}
+.jx-box h3{margin:0; font-size:clamp(21px,3.4vw,28px); color:var(--marble); letter-spacing:.03em; text-align:center}
+.jx-sub{margin:8px auto 20px; text-align:center; font-style:italic; color:var(--ink-2); font-size:15px; max-width:600px}
+.peta-grid{display:grid; grid-template-columns:300px 1fr; gap:22px; align-items:start}
+.peta-svg{width:100%; height:auto; display:block}
+.band{cursor:pointer}
+.band rect.bg{fill:rgba(255,255,255,.03); stroke:var(--line); stroke-width:1.2; transition:all .3s ease}
+.band:hover rect.bg{fill:rgba(212,175,55,.08)}
+.band.on rect.bg{fill:rgba(212,175,55,.13); stroke:var(--gold-2); stroke-width:1.8; filter:drop-shadow(0 0 10px rgba(212,175,55,.4))}
+.band text{fill:var(--marble); font-family:var(--ff-d); pointer-events:none}
+.band .jml{fill:var(--gold-2)}
+.peta-daftar h4{margin:2px 0 4px; font-size:19px; color:var(--gold-2); letter-spacing:.05em}
+.peta-daftar .ket{margin:0 0 12px; font-style:italic; color:var(--ink-2); font-size:14px}
+.lina-track{display:flex; gap:14px; overflow-x:auto; padding:6px 2px 14px; scrollbar-width:thin}
+.era{flex:0 0 238px; border:1px solid var(--line); border-radius:16px; padding:16px 15px;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),transparent); transition:border-color .3s}
+.era:hover{border-color:var(--line-2)}
+.era .no{font-family:var(--ff-d); font-size:11px; letter-spacing:.2em; color:var(--gold)}
+.era h4{margin:5px 0 6px; font-size:16.5px; color:var(--marble)}
+.era p{margin:0 0 12px; font-size:13.5px; line-height:1.55; color:var(--ink-2); font-style:italic}
+.era .dots{display:flex; flex-wrap:wrap; gap:7px}
+.dot{width:34px; height:34px; border-radius:50%; display:grid; place-items:center; cursor:pointer;
+  font-family:var(--ff-d); font-size:13px; color:#0a0d18; border:2px solid rgba(255,255,255,.25);
+  transition:transform .22s ease, box-shadow .22s ease}
+.dot:hover{transform:scale(1.18); box-shadow:0 0 14px 2px rgba(212,175,55,.55)}
+.mstone{flex:0 0 210px; border:1.5px dashed var(--line-2); border-radius:16px; padding:16px 15px; align-self:center;
+  background:radial-gradient(200px 120px at 50% 0%, rgba(212,175,55,.14), transparent 70%); text-align:center}
+.mstone .petir{font-size:26px}
+.mstone h4{margin:6px 0; font-size:15px; color:var(--gold-2); letter-spacing:.06em}
+.mstone p{margin:0; font-size:13px; line-height:1.55; color:var(--ink)}
+@media (max-width:760px){.peta-grid{grid-template-columns:1fr}.jx-box{padding:22px 18px}}
+@media (prefers-reduced-motion:reduce){.jx.open .jx-box{animation:none !important}}
+
 </style>
 </head>
 <body>
@@ -816,6 +862,8 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
       </label>
       <span class="count" id="count"></span>
       <a class="btn" id="zodiakBtn" href="Rasi Bintang — Zodiak Yunani.html" title="Buka halaman rasi bintang">✦ Rasi Bintang</a>
+      <button class="btn" id="petaBtn" title="Jelajahi peta dunia mitologi">🗺 Peta</button>
+      <button class="btn" id="linaBtn" title="Linimasa kosmogoni Yunani">📜 Linimasa</button>
       <button class="btn icon" id="randBtn" title="Buka dewa acak" aria-label="Buka dewa acak">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
       </button>
@@ -846,6 +894,27 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6"/><path d="M5 12l7-7 7 7"/></svg>
 </button>
 
+<div class="jx" id="petaJx" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="petaTitle">
+  <div class="scrim" id="petaScrim"></div>
+  <div class="jx-box">
+    <button class="close" id="petaClose" aria-label="Tutup">×</button>
+    <h3 id="petaTitle">Peta Dunia Mitologi</h3>
+    <p class="jx-sub">Tujuh alam semesta Yunani, dari langit tertinggi hingga Tartarus. Ketuk sebuah alam untuk melihat penghuninya.</p>
+    <div class="peta-grid">
+      <div id="petaSvg"></div>
+      <div class="peta-daftar" id="petaDaftar"></div>
+    </div>
+  </div>
+</div>
+<div class="jx" id="linaJx" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="linaTitle">
+  <div class="scrim" id="linaScrim"></div>
+  <div class="jx-box">
+    <button class="close" id="linaClose" aria-label="Tutup">×</button>
+    <h3 id="linaTitle">Linimasa Kosmogoni</h3>
+    <p class="jx-sub">Dari kekosongan Chaos hingga para Muse. Geser ke samping, ketuk titik dewa untuk membuka kisahnya.</p>
+    <div class="lina-track" id="linaTrack"></div>
+  </div>
+</div>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="mName">  <div class="scrim" id="scrim"></div>
   <div class="sheet" id="sheet" tabindex="-1"></div>
 </div>
@@ -1418,6 +1487,17 @@ function init(){
     }
   });
   applyFilter('');
+  var pb = $('#petaBtn');
+  if(pb) pb.addEventListener('click', bukaPeta);
+  var lb = $('#linaBtn');
+  if(lb) lb.addEventListener('click', bukaLina);
+  $('#petaClose').addEventListener('click', function(){ tutupJx(); });
+  $('#linaClose').addEventListener('click', function(){ tutupJx(); });
+  $('#petaScrim').addEventListener('click', function(){ tutupJx(); });
+  $('#linaScrim').addEventListener('click', function(){ tutupJx(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && document.querySelector('.jx.open')) tutupJx();
+  });
 }
 
 /* ---------- penyalaan kepala kelompok saat terlihat ---------- */
@@ -1645,6 +1725,132 @@ function pasangPohon(){
     n.addEventListener('click', function(){ var g = FLAT[parseInt(n.getAttribute('data-i'), 10)]; if(g) openModal(g); });
   });
 }
+/* ===== Peta Dunia Mitologi ===== */
+var ALAM = [
+  { id:'olimpus', nama:'Olimpus', ikon:'🏛️', ket:'Puncak para dewa, singgasana Zeus dan jamuan nektar abadi.',
+    kunci:['olimp'] },
+  { id:'tartarus', nama:'Tartarus', ikon:'🔥', ket:'Jurang terdalam, penjara para Titan yang digulingkan.',
+    kunci:['jurang','tartarus'] },
+  { id:'bawah', nama:'Dunia Bawah', ikon:'💀', ket:'Kerajaan Hades: arwah, hakim orang mati, dan padang Asphodel.',
+    kunci:['bawah','stiks','hades'] },
+  { id:'laut', nama:'Lautan', ikon:'🌊', ket:'Wilayah Poseidon: samudra dalam, karang, dan istana bawah laut.',
+    kunci:['laut','samudra','sungai','mata air','istana bawah'] },
+  { id:'langit', nama:'Langit & Bintang', ikon:'✨', ket:'Kubah langit: matahari, bulan, fajar, dan rasi abadi.',
+    kunci:['langit','kubah','bintang','kereta','fajar','poros','malam','takhta ilahi','bentang'] },
+  { id:'fana', nama:'Bumi Fana', ikon:'🏺', ket:'Dunia manusia: kuil Delphi, Kreta, Delos, gunung, dan rimba.',
+    kunci:['delfi','delphi','delf','kreta','delos','troya','kuil','pulau','hutan','rimba','gunung','lembah','tebing','caucasus','ida','kitera','lemnos','arkadia','eleusis','naksos','samos','argos','rhamnous','plataea','rumah','altar','taman','arena','padang','persimpangan','rawa','kuburan','seluruh bumi','pegunungan'] },
+  { id:'misteri', nama:'Alam Misteri', ikon:'🌌', ket:'Tempat di luar peta: kekosongan purba dan sumber yang tak bernama.',
+    kunci:['belum ada','kegelapan','sumber ingatan'] }
+];
+function alamOf(it){
+  var h = nrm(it.home || '');
+  for(var i = 0; i < ALAM.length; i++){
+    var ks = ALAM[i].kunci, j;
+    for(j = 0; j < ks.length; j++){ if(h.indexOf(ks[j]) > -1) return ALAM[i].id; }
+  }
+  return 'misteri';
+}
+var alamPilih = 'olimpus';
+function decoAlam(id){
+  if(id === 'olimpus') return '<path d="M40 52 L110 14 L180 52 Z" fill="none" stroke="rgba(212,175,55,.55)" stroke-width="1.4"/><path d="M70 52 L110 26 L150 52" fill="none" stroke="rgba(212,175,55,.3)" stroke-width="1"/>';
+  if(id === 'bawah') return '<path d="M86 12 h48 v40 h-48 Z M94 20 h32 v32 h-32 Z" fill="none" stroke="rgba(150,130,200,.55)" stroke-width="1.4"/>';
+  if(id === 'tartarus') return '<path d="M100 44 L110 18 L118 38 L128 14 L136 44 Z" fill="none" stroke="rgba(220,110,70,.6)" stroke-width="1.4"/>';
+  if(id === 'laut') return '<path d="M60 30 q12 -10 24 0 t24 0 t24 0 t24 0 t24 0" fill="none" stroke="rgba(110,180,220,.6)" stroke-width="1.6"/><path d="M60 44 q12 -10 24 0 t24 0 t24 0 t24 0 t24 0" fill="none" stroke="rgba(110,180,220,.35)" stroke-width="1.2"/>';
+  if(id === 'langit') return '<circle cx="80" cy="28" r="2" fill="rgba(255,255,255,.8)"/><circle cx="120" cy="20" r="1.4" fill="rgba(255,255,255,.6)"/><circle cx="155" cy="34" r="1.8" fill="rgba(255,255,255,.7)"/><circle cx="105" cy="40" r="1.2" fill="rgba(255,255,255,.5)"/><circle cx="140" cy="46" r="1" fill="rgba(255,255,255,.5)"/>';
+  if(id === 'fana') return '<path d="M84 44 V22 M100 44 V22 M116 44 V22 M132 44 V22 M78 22 h60 M76 44 h64" stroke="rgba(200,170,110,.55)" stroke-width="1.4" fill="none"/>';
+  return '<ellipse cx="110" cy="32" rx="46" ry="12" fill="none" stroke="rgba(170,150,220,.5)" stroke-width="1.3" stroke-dasharray="5 5"/>';
+}
+function renderPeta(){
+  var svg = '<svg class="peta-svg" viewBox="0 0 220 560" role="group" aria-label="Peta alam">';
+  ALAM.forEach(function(a, i){
+    var n = FLAT.filter(function(g){ return alamOf(g) === a.id; }).length;
+    var y = i * 80;
+    svg += '<g class="band' + (a.id === alamPilih ? ' on' : '') + '" data-alam="' + a.id + '" tabindex="0" role="button" aria-label="' + a.nama + ', ' + n + ' penghuni">'
+      + '<rect class="bg" x="2" y="' + (y + 2) + '" width="216" height="76" rx="12"/>'
+      + '<g transform="translate(0,' + y + ')">' + decoAlam(a.id) + '</g>'
+      + '<text x="110" y="' + (y + 60) + '" text-anchor="middle" font-size="12.5" letter-spacing="1">' + a.ikon + ' ' + a.nama.toUpperCase() + '</text>'
+      + '<text class="jml" x="110" y="' + (y + 73) + '" text-anchor="middle" font-size="10.5">' + n + ' penghuni</text>'
+      + '</g>';
+  });
+  svg += '</svg>';
+  $('#petaSvg').innerHTML = svg;
+  renderDaftar();
+  $$('#petaSvg .band').forEach(function(b){
+    function pilih(){ alamPilih = b.getAttribute('data-alam'); renderPeta(); }
+    b.addEventListener('click', pilih);
+    b.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); pilih(); } });
+  });
+}
+function renderDaftar(){
+  var a = null, i;
+  for(i = 0; i < ALAM.length; i++){ if(ALAM[i].id === alamPilih) a = ALAM[i]; }
+  var penghuni = FLAT.filter(function(g){ return alamOf(g) === alamPilih; });
+  var h = '<h4>' + a.ikon + ' ' + a.nama + '</h4><p class="ket">' + a.ket + '</p><div class="sib-row">'
+    + penghuni.map(function(g){ return '<span data-i="' + FLAT.indexOf(g) + '" title="' + escT(g.e) + '">' + escT(g.n) + '</span>'; }).join('')
+    + '</div>';
+  $('#petaDaftar').innerHTML = h;
+  $$('#petaDaftar span').forEach(function(s){
+    s.addEventListener('click', function(){
+      var g = FLAT[parseInt(s.getAttribute('data-i'), 10)];
+      tutupJx(); if(g) openModal(g);
+    });
+  });
+}
+/* ===== Linimasa Kosmogoni ===== */
+var ERA = [
+  { t:'Kekosongan Awal', ket:'Sebelum waktu ada, hanya Chaos yang bergolak — lalu lahir Gaia, Tartarus, dan Malam.', grup:['proto'] },
+  { t:'Zaman Titan', ket:'Anak-anak Gaia dan Uranus menguasai dunia. Kronos menelan anaknya sendiri demi takhta.', grup:['titan'] },
+  { peristiwa:'⚡ Titanomakhia', ket:'Perang sepuluh tahun. Zeus membebaskan saudaranya dan menggulingkan Kronos.' },
+  { t:'Keturunan Titan', ket:'Darah Titan yang berpihak pada Zeus: Prometheus, Atlas, Helios, dan para pembawa cahaya.', grup:['turun'] },
+  { t:'Zaman Olimpus', ket:'Dua belas dewa bertahta di puncak. Ketertiban dunia ditegakkan dari singgasana Zeus.', grup:['olymp'] },
+  { peristiwa:'⚔️ Zaman Pahlawan', ket:'Gigantomakhia, banjir Deukalion, hingga Perang Troya — dewa dan manusia bertarung berdampingan.' },
+  { t:'Dunia Bawah', ket:'Hades mengundi dan menerima bagian paling sunyi: rumah orang mati beserta penghuninya.', grup:['bawah'] },
+  { t:'Lautan', ket:'Poseidon menerima samudra. Trisulanya mengguncang karang dalam dan pulau-pulau.', grup:['laut'] },
+  { t:'Langit & Angin', ket:'Penjaga cakrawala dan empat arah mata angin yang memutar cuaca dunia.', grup:['angin'] },
+  { t:'Personifikasi', ket:'Dewa-dewa kecil dan kekuatan abstrak: nasib, ingatan, fajar, dan balas dendam.', grup:['lain'] },
+  { t:'Para Muse', ket:'Sembilan putri ingatan, pelindung seluruh ilmu dan seni di lereng Helikon.', grup:['muse'] }
+];
+function grupByK(k){ for(var i = 0; i < DATA.length; i++){ if(DATA[i].k === k) return DATA[i]; } return null; }
+function renderLina(){
+  var h = '', no = 0, i, j;
+  ERA.forEach(function(e){
+    if(e.peristiwa){
+      h += '<div class="mstone"><div class="petir">⚡</div><h4>' + e.peristiwa + '</h4><p>' + e.ket + '</p></div>';
+      return;
+    }
+    no++;
+    h += '<div class="era"><div class="no">ERA ' + ('0' + no).slice(-2) + '</div><h4>' + e.t + '</h4><p>' + e.ket + '</p><div class="dots">';
+    e.grup.forEach(function(k){
+      var g = grupByK(k);
+      if(!g) return;
+      g.items.forEach(function(it){
+        h += '<span class="dot" data-i="' + FLAT.indexOf(it) + '" title="' + escT(it.n + ' — ' + it.e) + '" style="background:' + it.c + '">' + escT(it.n.charAt(0)) + '</span>';
+      });
+    });
+    h += '</div></div>';
+  });
+  $('#linaTrack').innerHTML = h;
+  $$('#linaTrack .dot').forEach(function(d){
+    d.addEventListener('click', function(){
+      var g = FLAT[parseInt(d.getAttribute('data-i'), 10)];
+      tutupJx(); if(g){ openModal(g); }
+    });
+  });
+}
+/* ===== buka-tutup overlay jelajah ===== */
+function bukaJx(id){
+  tutupJx(true);
+  var k = $(id);
+  k.classList.add('open');
+  k.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+function tutupJx(diam){
+  $$('.jx.open').forEach(function(k){ k.classList.remove('open'); k.setAttribute('aria-hidden', 'true'); });
+  if(!diam && !$('#modal').classList.contains('open')) document.body.style.overflow = '';
+}
+function bukaPeta(){ renderPeta(); bukaJx('#petaJx'); }
+function bukaLina(){ renderLina(); bukaJx('#linaJx'); }
 /* ---------- modal ---------- */
 var cur = null;
 function openModal(it){
