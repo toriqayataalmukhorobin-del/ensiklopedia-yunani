@@ -93,13 +93,21 @@ body.tampil-nama .buah text{display:block}
 .pil{position:fixed; z-index:50; left:50%; bottom:18px; transform:translateX(-50%); font-size:13px; font-style:italic;
   color:var(--ink-2); background:rgba(5,7,15,.72); padding:8px 18px; border-radius:999px; border:1px solid var(--line); white-space:nowrap}
 @media (max-width:760px){ .panel{left:12px; right:12px; top:auto; bottom:12px; width:auto; max-height:46vh} .cari input{width:150px} }
+.buah{transition:transform .25s ease, opacity .3s ease; transform-box:fill-box; transform-origin:center}
+.buah:hover{transform:scale(1.28)}
+.buah.redup{opacity:.14}
+.nebula{position:fixed; z-index:0; pointer-events:none; filter:blur(70px); opacity:.14; border-radius:50%}
+.nadi{animation:nadiP 3.2s ease-in-out infinite}
+@keyframes nadiP{ 0%,100%{opacity:.9} 50%{opacity:.3} }
 @media (prefers-reduced-motion:reduce){
-  .buah .cahaya,.daun-goyang,.tajuk-goyang,.gugur,.kabut{animation:none !important}
+  .buah .cahaya,.daun-goyang,.tajuk-goyang,.gugur,.kabut,.nadi{animation:none !important}
 }
 </style>
 </head>
 <body>
 <div class="bulan" aria-hidden="true"></div>
+<div class="nebula" style="width:52vw;height:340px;top:-90px;left:-12vw;background:radial-gradient(closest-side,#5a4a9a,transparent)" aria-hidden="true"></div>
+<div class="nebula" style="width:44vw;height:300px;top:30%;right:-14vw;background:radial-gradient(closest-side,#2a6a6a,transparent)" aria-hidden="true"></div>
 <div class="kabut" style="width:44vw;height:150px;top:20%;left:2%" aria-hidden="true"></div>
 <div class="kabut" style="width:38vw;height:130px;top:46%;right:0;animation-delay:-20s" aria-hidden="true"></div>
 <canvas id="kunang" aria-hidden="true"></canvas>
@@ -179,11 +187,21 @@ function bangun(){
   });
   s += '<defs><linearGradient id="kulit" x1="0" y1="0" x2="1" y2="0">'
     + '<stop offset="0" stop-color="#241812"/><stop offset=".5" stop-color="#7d5732"/><stop offset="1" stop-color="#201510"/></linearGradient>'
-    + '<radialGradient id="tanahGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="rgba(212,175,55,.22)"/><stop offset="1" stop-color="rgba(212,175,55,0)"/></radialGradient></defs>';
+    + '<radialGradient id="tanahGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="rgba(212,175,55,.22)"/><stop offset="1" stop-color="rgba(212,175,55,0)"/></radialGradient><linearGradient id="emasNadi" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="rgba(212,175,55,0)"/><stop offset=".5" stop-color="rgba(242,221,166,.85)"/><stop offset="1" stop-color="rgba(212,175,55,0)"/></linearGradient></defs>';
   /* tanah */
   s += '<ellipse cx="' + CX + '" cy="' + (TANAH + 260) + '" rx="' + (W / 2 + 100) + '" ry="230" fill="#060905"/>';
   s += '<ellipse cx="' + CX + '" cy="' + TANAH + '" rx="' + (W / 2 + 100) + '" ry="66" fill="#0c110a"/>';
   s += '<ellipse cx="' + CX + '" cy="' + TANAH + '" rx="300" ry="48" fill="url(#tanahGlow)"/>';
+  for(i = 0; i < 46; i++){
+    var gx = CX - 700 + rnd() * 1400, gy = TANAH + 28 + rnd() * 34;
+    s += '<path d="M' + gx.toFixed(0) + ' ' + gy.toFixed(0) + ' q3 -12 6 0 M' + (gx + 7).toFixed(0) + ' ' + gy.toFixed(0) + ' q3 -16 6 0 M' + (gx + 14).toFixed(0) + ' ' + gy.toFixed(0) + ' q3 -10 6 0" stroke="#1d2f1a" stroke-width="2.5" fill="none" stroke-linecap="round"/>';
+  }
+  for(i = 0; i < 6; i++){
+    var jx = CX - 560 + i * 220 + (rnd() - 0.5) * 60, jy = TANAH + 44 + rnd() * 20;
+    s += '<line x1="' + jx.toFixed(0) + '" y1="' + jy.toFixed(0) + '" x2="' + jx.toFixed(0) + '" y2="' + (jy - 12).toFixed(0) + '" stroke="#cfc0a0" stroke-width="3"/>'
+      + '<ellipse cx="' + jx.toFixed(0) + '" cy="' + (jy - 14).toFixed(0) + '" rx="9" ry="6" fill="#8a4a3a"/>'
+      + '<circle cx="' + jx.toFixed(0) + '" cy="' + (jy - 14).toFixed(0) + '" r="2" fill="#ffe9bb"/>';
+  }
   /* batang perkasa */
   s += '<path d="M' + (CX - 88) + ' ' + (TANAH + 30) + ' C' + (CX - 64) + ' 1000 ' + (CX - 44) + ' 850 ' + (CX - 30) + ' 700'
     + ' L' + (CX + 30) + ' 700 C' + (CX + 44) + ' 850 ' + (CX + 64) + ' 1000 ' + (CX + 88) + ' ' + (TANAH + 30) + ' Z" fill="url(#kulit)"/>';
@@ -192,6 +210,10 @@ function bangun(){
     s += '<path d="M' + rx + ' ' + (TANAH - 20) + ' q6 -120 -4 -260" stroke="rgba(0,0,0,.35)" stroke-width="5" fill="none"/>';
   }
   s += '<path d="M' + (CX - 40) + ' 900 q40 14 80 0 M' + (CX - 48) + ' 980 q48 16 96 0 M' + (CX - 56) + ' 1060 q56 18 112 0" stroke="rgba(0,0,0,.3)" stroke-width="4" fill="none"/>';
+  /* nadi emas di batang */
+  [[-42, 1160, 800], [6, 1180, 780], [46, 1150, 820]].forEach(function(v, vi){
+    s += '<path class="nadi" style="animation-delay:-' + (vi * 1.1) + 's" d="M' + (CX + v[0]) + ' ' + v[1] + ' C' + (CX + v[0] - 12) + ' ' + ((v[1] + v[2]) / 2) + ' ' + (CX + v[0] + 12) + ' ' + ((v[1] + v[2]) / 2) + ' ' + (CX + v[0]) + ' ' + v[2] + '" stroke="url(#emasNadi)" stroke-width="3" fill="none" stroke-linecap="round"/>';
+  });
   /* dahan utama simetris */
   var dahan = [[-1, 760, 420], [1, 760, 420], [-1, 880, 300], [1, 880, 300], [-1, 990, 200], [1, 990, 200]];
   dahan.forEach(function(dh){
@@ -230,11 +252,15 @@ function bangun(){
   var atas = TREEDATA.filter(function(g){ return DALAM[g.n] >= 2; })
     .sort(function(a, b){ return DALAM[b.n] - DALAM[a.n] || (a.n < b.n ? -1 : 1); });
   var slot = [], yy;
-  for(yy = 170; yy <= 1010 && slot.length < atas.length + 10; yy += 64){
+  var NKOL = 13;
+  function kolomX(ci){ return 750 + (ci - (NKOL - 1) / 2) * 72; }
+  for(yy = 170; yy <= 1010 && slot.length < atas.length + 12; yy += 64){
     var setengah = 460 * Math.sqrt(Math.max(0.05, 1 - ((yy - 480) / 400) * ((yy - 480) / 400)));
     var n = Math.max(2, Math.floor(setengah * 2 / 72));
-    for(var k = 0; k < n && slot.length < atas.length + 10; k++){
-      slot.push({ x: 750 + (k - (n - 1) / 2) * 72, y: yy });
+    if(n > NKOL) n = NKOL;
+    var mulai = Math.floor((NKOL - n) / 2);
+    for(var k = 0; k < n && slot.length < atas.length + 12; k++){
+      slot.push({ x: kolomX(mulai + k), y: yy });
     }
   }
   atas.forEach(function(g, k){
@@ -258,6 +284,7 @@ function bangun(){
       + '<g class="buah" data-n="' + esc(g.n) + '" style="color:' + g.c + '" tabindex="0" role="button" aria-label="Buah ' + esc(g.n) + '">'
       + '<circle class="cahaya" cx="' + g._x.toFixed(0) + '" cy="' + g._y.toFixed(0) + '" r="21" fill="' + g.c + '" style="animation-delay:-' + (gi % 4) + 's"/>'
       + '<circle class="halo" cx="' + g._x.toFixed(0) + '" cy="' + g._y.toFixed(0) + '" r="11" fill="#0b1020" stroke="' + g.c + '" stroke-width="2.5"/>'
+      + '<circle cx="' + (g._x - 3).toFixed(0) + '" cy="' + (g._y - 3).toFixed(0) + '" r="2.4" fill="rgba(255,255,255,.85)"/>'
       + '<text x="' + g._x.toFixed(0) + '" y="' + (g._y + 32).toFixed(0) + '" text-anchor="middle" font-size="12.5">' + esc(nama) + '</text></g>';
   });
   s += '<g id="garisSil"></g>';
@@ -274,6 +301,7 @@ function bangun(){
       for(i = 0; i < TREEDATA.length; i++){ if(TREEDATA[i].n === b.getAttribute('data-n')) g = TREEDATA[i]; }
       if(!g) return;
       garisKeturunan(g.n, true);
+      terapkanRedup(b.getAttribute('data-n'));
       tip.querySelector('b').textContent = g.n;
       tip.querySelector('span').textContent = g.e;
       tip.style.display = 'block';
@@ -284,9 +312,31 @@ function bangun(){
     });
     b.addEventListener('pointerleave', function(){
       tip.style.display = 'none';
-      if(!document.querySelector('.buah.pilih')) garisKeturunan(null);
+      if(!document.querySelector('.buah.pilih')){ garisKeturunan(null); terapkanRedup(null); }
     });
   });
+}
+/* kerabat untuk peredupan */
+function kinSet(nama){
+  var set = {};
+  set[nama] = 1;
+  function byN(n){ for(var k = 0; k < TREEDATA.length; k++) if(TREEDATA[k].n === n) return TREEDATA[k]; return null; }
+  var tump = [byN(nama)], c;
+  while(tump.length){
+    c = tump.pop(); if(!c) continue;
+    pecah(c.o).forEach(function(p){ if(!set[p.n]){ set[p.n] = 1; tump.push(p); } });
+  }
+  var t2 = [nama];
+  while(t2.length){
+    var cn = t2.pop();
+    (ANAKMAP[cn] || []).forEach(function(ch){ if(!set[ch.n]){ set[ch.n] = 1; t2.push(ch.n); } });
+  }
+  return set;
+}
+function terapkanRedup(nama){
+  if(!nama){ $$('.buah.redup').forEach(function(o){ o.classList.remove('redup'); }); return; }
+  var set = kinSet(nama);
+  $$('.buah').forEach(function(o){ o.classList.toggle('redup', !set[o.getAttribute('data-n')]); });
 }
 /* garis keturunan menyala */
 function garisKeturunan(nama, sementara){
@@ -337,6 +387,7 @@ function bukaPanel(nama){
   document.getElementById('panelIsi').innerHTML = h;
   document.getElementById('panel').hidden = false;
   garisKeturunan(nama);
+  terapkanRedup(nama);
   document.getElementById('tip').style.display = 'none';
   $$('#panelIsi .kerabat span').forEach(function(sp){
     sp.addEventListener('click', function(){ lompat(sp.getAttribute('data-n')); });
@@ -354,7 +405,13 @@ function lompat(nama){
 document.getElementById('panelTutup').addEventListener('click', function(){
   document.getElementById('panel').hidden = true;
   garisKeturunan(null);
+  terapkanRedup(null);
   $$('.buah.pilih').forEach(function(b){ b.classList.remove('pilih'); });
+});
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape' && !document.getElementById('panel').hidden && document.activeElement !== document.getElementById('qcari')){
+    document.getElementById('panelTutup').click();
+  }
 });
 document.getElementById('tglNama').addEventListener('change', function(){
   document.body.classList.toggle('tampil-nama', this.checked);
