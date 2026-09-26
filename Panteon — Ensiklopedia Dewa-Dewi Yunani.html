@@ -724,6 +724,33 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
 @media (max-width:760px){.peta-grid{grid-template-columns:1fr}.jx-box{padding:22px 18px}}
 @media (prefers-reduced-motion:reduce){.jx.open .jx-box{animation:none !important}}
 
+
+/* ============================================================
+   DUNIA DEWA — sinar ilahi, cakra horizon, bara, halo
+   ============================================================ */
+#sinar{position:fixed; inset:-25%; z-index:1; pointer-events:none; opacity:.55; mix-blend-mode:screen;
+  background:conic-gradient(from 180deg at 50% 0%, transparent 0deg, rgba(255,240,200,.07) 4deg, transparent 9deg,
+    transparent 20deg, rgba(255,240,200,.05) 24deg, transparent 29deg, transparent 150deg,
+    rgba(255,240,200,.05) 155deg, transparent 160deg, transparent 171deg, rgba(255,240,200,.07) 176deg, transparent 181deg);
+  animation:ayunSinar 26s ease-in-out infinite alternate}
+@keyframes ayunSinar{ from{transform:rotate(-2deg)} to{transform:rotate(2deg)} }
+#cakra{position:fixed; left:50%; bottom:-140px; transform:translateX(-50%); width:min(1000px,120vw); height:340px;
+  z-index:1; pointer-events:none;
+  background:radial-gradient(50% 60% at 50% 40%, rgba(255,214,140,.15), rgba(212,150,80,.05) 55%, transparent 75%);
+  animation:cakraNapas 9s ease-in-out infinite}
+@keyframes cakraNapas{ 0%,100%{opacity:.75; transform:translateX(-50%) scale(1)} 50%{opacity:1; transform:translateX(-50%) scale(1.07)} }
+.embar{position:absolute; bottom:16%; border-radius:50%; pointer-events:none; z-index:1;
+  background:radial-gradient(circle, #ffe9bb 0 1px, rgba(230,160,60,.9) 2px, transparent 4px);
+  animation:naikEmbar linear infinite}
+@keyframes naikEmbar{ 0%{transform:translateY(0); opacity:0} 12%{opacity:.9} 100%{transform:translateY(-62vh) translateX(26px); opacity:0} }
+.card:hover .medal{filter:drop-shadow(0 0 16px var(--c,var(--gold)))}
+.modal.open .sheet::before{animation:cahayaSheet 1.4s ease-out both}
+@keyframes cahayaSheet{ 0%{opacity:0} 35%{opacity:1} 100%{opacity:.9} }
+@media (prefers-reduced-motion:reduce){
+  #sinar,#cakra,.embar{animation:none !important}
+  .modal.open .sheet::before{animation:none !important}
+}
+
 </style>
 </head>
 <body>
@@ -753,6 +780,8 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
   </svg>
 </div>
 <div id="rays" aria-hidden="true"></div>
+<div id="sinar" aria-hidden="true"></div>
+<div id="cakra" aria-hidden="true"></div>
 <div class="vignette" aria-hidden="true"></div>
 <div class="grain"></div>
 <div id="burst" aria-hidden="true"></div>
@@ -2124,11 +2153,40 @@ var Langit = {
     }catch(e){}
     x.restore();
   },
+  sinar: function(){
+    var x = this.x, w = this.w, h = this.h;
+    if(!x) return;
+    var t = (this.t || 0) * 0.00002, cx = w * 0.5, cy = -h * 0.08, i, a, grad;
+    x.save();
+    try{
+      x.globalCompositeOperation = 'lighter';
+      x.translate(cx, cy);
+      x.rotate(Math.sin(t * 3) * 0.06);
+      for(i = -2; i <= 2; i++){
+        a = -Math.PI / 2 + i * 0.16;
+        grad = x.createLinearGradient(0, 0, Math.cos(a) * h, Math.sin(a) * h);
+        grad.addColorStop(0, 'rgba(255,240,205,0.055)');
+        grad.addColorStop(1, 'rgba(255,240,205,0)');
+        x.fillStyle = grad;
+        x.beginPath();
+        x.moveTo(0, 0);
+        x.arc(0, 0, h * 1.1, a - 0.035, a + 0.035);
+        x.closePath();
+        x.fill();
+      }
+    }catch(e){}
+    x.restore();
+  },
   step: function(now, dt){
     var x = this.x, w = this.w, h = this.h, d = this.dpr, i, p;
     this.t = now;
+    if(!this.tintCur) this.tintCur = { r: 232, g: 209, b: 159 };
+    if(this.tintTgt){
+      var tc = this.tintCur, tg = this.tintTgt;
+      tc.r += (tg.r - tc.r) * 0.03; tc.g += (tg.g - tc.g) * 0.03; tc.b += (tg.b - tc.b) * 0.03;
+    }
     x.clearRect(0, 0, w, h);
-    this.aurora();
+    this.aurora(); this.sinar();
     /* meteor langka melintas */
     if(this.nextStar === undefined){ this.nextStar = 5000; this.star = null; }
     this.nextStar -= dt;
@@ -2167,7 +2225,7 @@ var Langit = {
       x.beginPath();
       x.arc(p.x, p.y, p.r, 0, 6.2832);
       x.fillStyle = p.gold
-        ? 'rgba(232,209,159,' + tw.toFixed(3) + ')'
+        ? ('rgba(' + ((this.tintCur.r | 0) + ',' + (this.tintCur.g | 0) + ',' + (this.tintCur.b | 0)) + ',' + tw.toFixed(3) + ')')
         : 'rgba(255,255,255,' + (tw * 0.7).toFixed(3) + ')';
       x.fill();
       if(p.r > 1.6 * d){
@@ -2191,6 +2249,10 @@ var Realam = {
     if(this.key === groupKey) return;
     this.key = groupKey;
     Suara.setRealm(groupKey);
+    try{
+      var mt = /(\d+),\s*(\d+),\s*(\d+)/.exec(R.warna[0] || '');
+      if(mt && window.Langit) Langit.tintTgt = { r: +mt[1], g: +mt[2], b: +mt[3] };
+    }catch(e){}
     var a = document.getElementById('realmA');
     var b = document.getElementById('realmB');
     if(!a || !b) return;
@@ -2415,6 +2477,19 @@ var Gerbang = {
     }
     document.body.style.overflow = 'hidden';
     if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){ enter(); return; }
+        try{
+      var gw = g.querySelector('.wrap');
+      for(var ei = 0; ei < 14; ei++){
+        var em = document.createElement('span');
+        em.className = 'embar';
+        var sz = (3 + Math.random() * 4).toFixed(1);
+        em.style.left = (4 + Math.random() * 92) + '%';
+        em.style.width = sz + 'px'; em.style.height = sz + 'px';
+        em.style.animationDuration = (5 + Math.random() * 6).toFixed(1) + 's';
+        em.style.animationDelay = (-Math.random() * 8).toFixed(1) + 's';
+        gw.appendChild(em);
+      }
+    }catch(e){}
     var t = setTimeout(enter, 6000);
     function masuk(){ clearTimeout(t); enter(); mulaiMusik(); }
     var eb = document.getElementById('enterBtn');
