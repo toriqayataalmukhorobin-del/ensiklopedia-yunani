@@ -664,6 +664,38 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
   .chip.on,.search input:focus{animation:none !important}
 }
 
+
+/* ---------- Kalkulator zodiak ---------- */
+.kalk{position:fixed; inset:0; z-index:60; display:grid; place-items:center; padding:20px; visibility:hidden}
+.kalk.open{visibility:visible}
+.kalk .scrim{position:absolute; inset:0; background:rgba(3,5,12,.72); backdrop-filter:blur(7px); -webkit-backdrop-filter:blur(7px); opacity:0; transition:opacity .4s ease}
+.kalk.open .scrim{opacity:1}
+.kalk-box{
+  position:relative; width:min(440px,100%); border-radius:22px; border:1px solid var(--line-2);
+  background:linear-gradient(180deg,var(--card-2),var(--card)); box-shadow:var(--shadow);
+  padding:30px 28px 28px; text-align:center;
+  opacity:0; transform:translateY(22px) scale(.98); transition:opacity .4s ease, transform .5s cubic-bezier(.19,1,.22,1);
+}
+.kalk.open .kalk-box{opacity:1; transform:none; animation:sheetPop .55s cubic-bezier(.2,1.25,.3,1) both}
+.kalk-box h3{margin:0; font-size:22px; color:var(--marble); letter-spacing:.04em}
+.kalk-sub{margin:8px 0 18px; font-style:italic; color:var(--ink-2); font-size:15px}
+.kalk-box input[type="date"]{
+  width:100%; padding:12px 16px; font-family:var(--ff-b); font-size:17px; color:var(--marble);
+  background:rgba(255,255,255,.05); border:1px solid var(--line-2); border-radius:14px; outline:none;
+  color-scheme:dark;
+}
+.kalk-box input[type="date"]:focus{box-shadow:0 0 0 4px rgba(212,175,55,.15); border-color:var(--gold)}
+.kalk-go{margin-top:16px; width:100%; justify-content:center; font-size:13px; padding:13px 16px}
+.kalk-go:hover{box-shadow:0 0 26px -6px rgba(212,175,55,.6)}
+.kalk-hasil{margin-top:20px; padding-top:20px; border-top:1px solid var(--line); animation:riseIn .5s cubic-bezier(.2,.8,.2,1) both}
+.kalk-hasil .zimg{width:150px; margin:0 auto 10px; display:block}
+.kalk-hasil h4{margin:0; font-size:24px; color:var(--marble)}
+.kalk-hasil p{margin:4px 0 14px; font-style:italic; color:var(--gold-2); font-size:14.5px}
+.kalk-lihat{width:100%; justify-content:center}
+.kalk-goyang{animation:goyang .4s ease}
+@keyframes goyang{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@media (prefers-reduced-motion:reduce){.kalk.open .kalk-box,.kalk-hasil{animation:none !important}}
+
 </style>
 </head>
 <body>
@@ -769,6 +801,7 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
       </label>
       <span class="count" id="count"></span>
       <a class="btn" id="balikBtn" href="Panteon — Ensiklopedia Dewa-Dewi Yunani.html" title="Kembali ke Panteon">← Panteon</a>
+      <button class="btn" id="zodiakkuBtn" title="Cari rasi bintang dari tanggal lahir">🎂 Zodiakku</button>
       <button class="btn icon" id="soundBtn" title="Nyalakan musik" aria-label="Nyalakan musik" aria-pressed="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M4 9v6h3.5L12 19V5L7.5 9H4Z"/>
@@ -796,6 +829,17 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6"/><path d="M5 12l7-7 7 7"/></svg>
 </button>
 
+<div class="kalk" id="kalk" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="kalkTitle">
+  <div class="scrim" id="kalkScrim"></div>
+  <div class="kalk-box">
+    <button class="close" id="kalkClose" aria-label="Tutup">×</button>
+    <h3 id="kalkTitle">Kapan kamu lahir?</h3>
+    <p class="kalk-sub">Pilih tanggal lahirmu, kami tunjukkan rasi yang menaungimu.</p>
+    <input type="date" id="kalkDate" aria-label="Tanggal lahir">
+    <button class="btn kalk-go" id="kalkGo">Lihat Rasi Bintangku ✦</button>
+    <div class="kalk-hasil" id="kalkHasil" hidden></div>
+  </div>
+</div>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="mName">  <div class="scrim" id="scrim"></div>
   <div class="sheet" id="sheet" tabindex="-1"></div>
 </div>
@@ -1193,11 +1237,67 @@ function init(){
     }
   });
   $('#sRasi').textContent = ZDATA.length;
+  var zb = $('#zodiakkuBtn');
+  if(zb) zb.addEventListener('click', bukaKalk);
+  $('#kalkClose').addEventListener('click', tutupKalk);
+  $('#kalkScrim').addEventListener('click', tutupKalk);
+  $('#kalkGo').addEventListener('click', hitungKalk);
+  $('#kalkDate').addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); hitungKalk(); } });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && $('#kalk').classList.contains('open')) tutupKalk();
+  });
   var nb = 0;
   Object.keys(ZLANG).forEach(function(k){
     nb += ZLANG[k].stars.length + ZLANG[k].dots.length;
   });
   $('#sBintang').textContent = nb + '+';
+}
+/* ===== Kalkulator zodiak dari tanggal lahir ===== */
+function zodiakDariTanggal(bulan, tanggal){
+  var batas = [[1,20,'Akuarius'],[2,19,'Pises'],[3,21,'Aries'],[4,20,'Taurus'],[5,21,'Gemini'],[6,21,'Cancer'],
+    [7,23,'Leo'],[8,23,'Virgo'],[9,23,'Libra'],[10,23,'Scorpio'],
+    [11,22,'Sagitarius'],[12,22,'Kaprikornus']];
+  var hasil = 'Kaprikornus', i;
+  for(i = 0; i < batas.length; i++){
+    if(bulan > batas[i][0] || (bulan === batas[i][0] && tanggal >= batas[i][1])) hasil = batas[i][2];
+  }
+  return hasil;
+}
+function bukaKalk(){
+  var k = $('#kalk');
+  k.classList.add('open');
+  k.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  var h = $('#kalkHasil'); h.hidden = true; h.innerHTML = '';
+  setTimeout(function(){ $('#kalkDate').focus(); }, 80);
+}
+function tutupKalk(){
+  var k = $('#kalk');
+  k.classList.remove('open');
+  k.setAttribute('aria-hidden', 'true');
+  if(!$('#modal').classList.contains('open')) document.body.style.overflow = '';
+}
+function hitungKalk(){
+  var v = $('#kalkDate').value;
+  var box = document.querySelector('.kalk-box');
+  if(!v){
+    box.classList.remove('kalk-goyang'); void box.offsetWidth; box.classList.add('kalk-goyang');
+    return;
+  }
+  var p = v.split('-');
+  var nama = zodiakDariTanggal(parseInt(p[1], 10), parseInt(p[2], 10));
+  var z = null, i;
+  for(i = 0; i < ZDATA.length; i++){ if(ZDATA[i].n === nama){ z = ZDATA[i]; break; } }
+  if(!z) return;
+  var w = WARNA_UNSUR[z.unsur] || '#d4af37';
+  var h = $('#kalkHasil');
+  h.innerHTML = '<span class="zimg">' + rasiSVG(z, 'kalk', false) + '</span>'
+    + '<h4>' + z.n + '</h4>'
+    + '<p>' + z.latin + ' &middot; ' + z.tanggal + '</p>'
+    + '<button class="btn kalk-lihat" id="kalkLihat">Baca kisah ' + z.n + ' →</button>';
+  try{ ledakan(innerWidth / 2, innerHeight / 2 - 60, w); }catch(e){}
+  h.hidden = false;
+  $('#kalkLihat').addEventListener('click', function(){ tutupKalk(); openZ(z); });
 }
 function step(dir){
   if(!cur) return;

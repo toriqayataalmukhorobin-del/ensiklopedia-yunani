@@ -660,6 +660,24 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
   .chip.on,.search input:focus{animation:none !important}
 }
 
+
+/* ---------- Silsilah keluarga ---------- */
+.pohon{overflow-x:auto; padding:10px 4px 6px; scrollbar-width:thin}
+.pohon svg{display:block; margin:0 auto; min-width:300px}
+.tnode{cursor:pointer}
+.tnode rect{fill:rgba(255,255,255,.045); stroke:var(--line-2); stroke-width:1.2; transition:all .25s ease}
+.tnode:hover rect,.tnode:focus rect{fill:rgba(212,175,55,.16); stroke:var(--gold-2); filter:drop-shadow(0 0 8px rgba(212,175,55,.45))}
+.tnode text{font-family:var(--ff-d); font-size:11px; letter-spacing:.06em; fill:var(--marble); text-anchor:middle; pointer-events:none}
+.tnode .rel{font-family:var(--ff-b); font-style:italic; font-size:10px; fill:var(--ink-2)}
+.tnode.pusat rect{fill:rgba(212,175,55,.16); stroke:var(--gold); stroke-width:1.6}
+.tline{stroke:rgba(212,175,55,.5); stroke-width:1.2; fill:none}
+.sib-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px}
+.sib-row span{cursor:pointer; font-size:13px; padding:5px 13px; border-radius:999px; border:1px solid var(--line);
+  background:rgba(201,164,92,.10); color:var(--marble); transition:all .22s ease}
+.sib-row span:hover{border-color:var(--line-2); background:rgba(212,175,55,.2); transform:translateY(-1px)}
+.sib-label{font-family:var(--ff-d); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin:14px 0 2px}
+@media (prefers-reduced-motion:reduce){.tnode rect,.sib-row span{transition:none}}
+
 </style>
 </head>
 <body>
@@ -1515,6 +1533,118 @@ function render(){
   observeGroups();
 }
 
+/* ===== Silsilah keluarga: cocokkan nama kerabat ke data dewa ===== */
+function cariDewa(teks){
+  var t = nrm(teks || '');
+  if(!t) return null;
+  var i, g, nama, cocok = null, panjang = 0;
+  for(i = 0; i < FLAT.length; i++){
+    g = FLAT[i]; nama = nrm(g.n);
+    if(!nama) continue;
+    if(t === nama) return g;
+  }
+  for(i = 0; i < FLAT.length; i++){
+    g = FLAT[i]; nama = nrm(g.n);
+    if(!nama || nama.length < 3) continue;
+    if(t.indexOf(nama) > -1 && nama.length > panjang){ cocok = g; panjang = nama.length; }
+  }
+  return cocok;
+}
+function pecahKerabat(val){
+  var out = [], seen = {};
+  (val || '').split(/[,;\/+&]| dan | serta | dengan | atau |\n/).forEach(function(tok){
+    var g = cariDewa(tok);
+    if(g && !seen[g.n]){ seen[g.n] = 1; out.push(g); }
+  });
+  return out;
+}
+function silsilah(it){
+  var ortu = pecahKerabat(it.o);
+  var pasangan = pecahKerabat(it.s).slice(0, 1);
+  var anak = pecahKerabat(it.a);
+  var kunci = {};
+  ortu.forEach(function(g){ kunci['o' + FLAT.indexOf(g)] = 1; });
+  var saudara = FLAT.filter(function(g){
+    if(g === it) return false;
+    var go = pecahKerabat(g.o), i;
+    for(i = 0; i < go.length; i++){ if(kunci['o' + FLAT.indexOf(go[i])]) return true; }
+    return false;
+  });
+  return { ortu: ortu, pasangan: pasangan, anak: anak, saudara: saudara };
+}
+function escT(s){ return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+function pohonSVG(it, sil){
+  var W = 132, H = 46, VGAP = 54, i, x;
+  var baris = [];
+  if(sil.ortu.length) baris.push({ k: 'ortu', arr: sil.ortu, rel: 'Orang tua' });
+  var tengah = [{ g: it, pusat: true }];
+  if(sil.pasangan.length) tengah.push({ g: sil.pasangan[0], rel: 'Pasangan' });
+  baris.push({ k: 'tengah', arr: tengah });
+  if(sil.anak.length) baris.push({ k: 'anak', arr: sil.anak.slice(0, 10), rel: 'Anak' });
+  var maks = 1;
+  baris.forEach(function(b){ maks = Math.max(maks, b.arr.length); });
+  var lebar = Math.max(300, maks * W), garis = '', node = '', y = 14;
+  var pos = {};
+  baris.forEach(function(b){
+    var n = b.arr.length, awal = (lebar - n * W) / 2;
+    pos[b.k] = [];
+    for(i = 0; i < n; i++){
+      x = awal + i * W;
+      pos[b.k].push(x + W / 2);
+      var item = b.arr[i], g = item.g || item, idx = FLAT.indexOf(g);
+      var nama = escT(g.n.length > 14 ? g.n.slice(0, 13) + '…' : g.n);
+      var rel = item.rel || (b.k === 'tengah' && !item.pusat ? 'Pasangan' : (b.rel || ''));
+      node += '<g class="tnode' + (item.pusat ? ' pusat' : '') + '" data-i="' + idx + '" tabindex="0" role="button" aria-label="Buka ' + escT(g.n) + '">'
+        + '<rect x="' + x.toFixed(0) + '" y="' + y + '" width="' + (W - 12) + '" height="' + H + '" rx="12" style="--c:' + g.c + '"/>'
+        + '<text x="' + (x + (W - 12) / 2).toFixed(0) + '" y="' + (y + (rel ? 19 : 28) + '"') + '>' + nama + '</text>'
+        + (rel ? '<text class="rel" x="' + (x + (W - 12) / 2).toFixed(0) + '" y="' + (y + 34) + '">' + rel + '</text>' : '')
+        + '</g>';
+    }
+    y += H + VGAP;
+  });
+  function hubung(atas, bawah){
+    if(!pos[atas] || !pos[bawah]) return '';
+    var s = '', a, midY;
+    var yA = 14 + (barisYa(atas)) * (H + VGAP) + H;
+    var yB = 14 + (barisYa(bawah)) * (H + VGAP);
+    midY = (yA + yB) / 2;
+    var semua = pos[atas].concat(pos[bawah]);
+    var x1 = Math.min.apply(null, semua), x2 = Math.max.apply(null, semua);
+    s += '<path class="tline" d="M' + x1 + ' ' + midY + ' H' + x2 + '"/>';
+    pos[atas].forEach(function(cx){ s += '<path class="tline" d="M' + cx + ' ' + yA + ' V' + midY + '"/>'; });
+    pos[bawah].forEach(function(cx){ s += '<path class="tline" d="M' + cx + ' ' + midY + ' V' + yB + '"/>'; });
+    return s;
+  }
+  function barisYa(k){ for(var j = 0; j < baris.length; j++) if(baris[j].k === k) return j; return 0; }
+  var tinggi = 14 + baris.length * (H + VGAP);
+  if(pos.ortu && pos.tengah) garis += hubung('ortu', 'tengah');
+  if(pos.anak && pos.tengah) garis += hubung('tengah', 'anak');
+  return '<svg viewBox="0 0 ' + lebar + ' ' + tinggi + '" width="' + lebar + '" height="' + tinggi + '" role="img" aria-label="Pohon keluarga ' + escT(it.n) + '">'
+    + garis + node + '</svg>';
+}
+function pohonHtml(it){
+  var sil = silsilah(it);
+  if(!sil.ortu.length && !sil.pasangan.length && !sil.anak.length && !sil.saudara.length) return '';
+  var h = '<div class="block"><h4>Silsilah Keluarga</h4><div class="pohon" id="pohonBox">' + pohonSVG(it, sil) + '</div>';
+  if(sil.saudara.length){
+    h += '<div class="sib-label">Saudara</div><div class="sib-row">'
+      + sil.saudara.slice(0, 12).map(function(g){
+          return '<span data-i="' + FLAT.indexOf(g) + '">' + escT(g.n) + '</span>';
+        }).join('') + '</div>';
+  }
+  h += '</div>';
+  return h;
+}
+function pasangPohon(){
+  $$('#pohonBox .tnode').forEach(function(n){
+    function buka(){ var g = FLAT[parseInt(n.getAttribute('data-i'), 10)]; if(g) openModal(g); }
+    n.addEventListener('click', buka);
+    n.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); buka(); } });
+  });
+  $$('.sib-row span').forEach(function(n){
+    n.addEventListener('click', function(){ var g = FLAT[parseInt(n.getAttribute('data-i'), 10)]; if(g) openModal(g); });
+  });
+}
 /* ---------- modal ---------- */
 var cur = null;
 function openModal(it){
@@ -1544,6 +1674,7 @@ function openModal(it){
         '<h2 class="title2" id="mName">' + it.n + '<span>' + it.e + '</span></h2>' +
         '<div class="rule"></div>' +
         storyHtml +
+        pohonHtml(it) +
         '<div class="block"><h4>Simbol dan Lambang</h4><div class="chipsym">' + sym + '</div></div>' +
         (facts ? '<div class="block"><h4>Fakta Menarik</h4><ul class="facts">' + facts + '</ul></div>' : '') +
         '<div class="block"><h4>Ranah</h4><div class="chipsym"><span>' + it.d + '</span></div></div>' +
@@ -1565,6 +1696,7 @@ function openModal(it){
   if(prev) $('#navPrev').addEventListener('click', function(){ openModal(prev); });
   if(next) $('#navNext').addEventListener('click', function(){ openModal(next); });
   $('#sheet').scrollTop = 0;
+  pasangPohon();
   $('#xClose').focus();
 }
 function step(dir){
