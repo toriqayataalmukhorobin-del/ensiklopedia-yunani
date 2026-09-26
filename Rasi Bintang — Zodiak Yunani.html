@@ -630,6 +630,40 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
 .zimg .mk{width:100%; height:100%; display:block}
 .zbig{border-radius:14px; overflow:hidden; border:1px solid var(--line-2); margin-bottom:20px}
 .zbig .mk{width:100%; height:auto; display:block}
+
+/* ============================================================
+   FX PACK v2 — kursor cahaya, magnetik, modal spring, jejak
+   ============================================================ */
+#kursor{position:fixed;left:0;top:0;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;
+  z-index:9999;pointer-events:none;opacity:0;transition:opacity .4s ease;will-change:transform;
+  background:radial-gradient(circle,rgba(250,236,196,.95) 0 2px,rgba(212,175,55,.4) 4px,rgba(212,175,55,.12) 13px,transparent 18px)}
+#kursor.nyala{opacity:.9}
+.jejak{position:fixed;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;pointer-events:none;z-index:9998;
+  background:radial-gradient(circle,#fdf3d0 0 1.5px,rgba(212,175,55,.8) 2.5px,transparent 4px);
+  animation:jejakFade .85s ease-out forwards}
+@keyframes jejakFade{to{transform:translateY(-22px) scale(.1);opacity:0}}
+@keyframes sheetPop{from{opacity:0;transform:translateY(30px) scale(.955)}to{opacity:1;transform:none}}
+.modal.open .sheet{animation:sheetPop .55s cubic-bezier(.2,1.25,.3,1) both}
+.card:active{transform:translateY(-3px) scale(.978) !important}
+.card.tilt-on{transition:transform .16s ease,box-shadow .35s ease,border-color .35s ease,background .35s ease}
+@keyframes chipPop{0%{transform:scale(.88)}60%{transform:scale(1.07)}100%{transform:scale(1)}}
+.chip.on{animation:chipPop .35s ease}
+.btn,.chip,#enterBtn,.toTop,.close,.sheet-nav button{will-change:transform}
+.search input:focus{animation:cariGlow 2.6s ease-in-out infinite}
+@keyframes cariGlow{0%,100%{box-shadow:0 0 0 4px rgba(212,175,55,.12)}50%{box-shadow:0 0 0 6px rgba(212,175,55,.22),0 0 26px -4px rgba(212,175,55,.45)}}
+#progress{box-shadow:0 0 12px rgba(212,175,55,.75)}
+.hero .pediment,.hero .title,.hero .kicker,.hero .lede,.hero .stats,#temple,.cloud{will-change:transform}
+.zimg,.zbig{transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.card:hover .zimg{transform:scale(1.04) rotate(-.6deg)}
+.card:hover .zbig{transform:scale(1.02)}
+.sheet .zbig svg,.card .zimg svg{filter:drop-shadow(0 8px 22px rgba(0,0,0,.5))}
+@media (hover:none),(pointer:coarse){#kursor,.jejak{display:none !important}}
+@media (prefers-reduced-motion:reduce){
+  #kursor,.jejak{display:none !important}
+  .modal.open .sheet{animation:none !important}
+  .chip.on,.search input:focus{animation:none !important}
+}
+
 </style>
 </head>
 <body>
@@ -796,6 +830,178 @@ pises: { stars: [[120,60,1.8,"Alrescha"],[55,130,1.4],[50,145,1.6],[45,158,1.4],
   lines: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,2],[0,6],[6,7],[7,8],[8,9],[9,10],[10,7]], dots: [] }
 };
 var ZDATA=[{"n": "Aries", "st": ["Aries adalah domba jantan berbulu emas bernama Chrysomallos, hadiah dari Hermes untuk Raja Athamas. Ketika anak tiri raja yang jahat hendak mengorbankan Phrixus dan Helle, domba itu terbang membawa keduanya kabur dari Yunani menuju Kolkhis.", "Di tengah perjalanan, Helle yang masih kecil terlepas dan jatuh ke selat yang kemudian dinamai Hellespont untuk mengenangnya. Phrixus selamat sampai Kolkhis, lalu mengorbankan domba itu untuk Zeus dan menggantungkan bulunya di pohon suci yang dijaga naga.", "Bulu domba emas itulah yang kemudian diburu Jason bersama para Argonaut dalam pelayaran paling terkenal di mitologi Yunani. Sebagai penghargaan atas jasanya, domba itu diangkat ke langit menjadi rasi Aries."], "f": ["Bulu Domba Emas menjadi benda paling diburu dalam kisah pelayaran Argo.", "Bintang paling terang di Aries bernama Hamal, yang berarti kepala domba dalam bahasa Arab."], "latin": "Aries", "tanggal": "21 Maret sampai 19 April", "unsur": "Api", "bintang": "Hamal, Sheratan, dan Mesarthim"}, {"n": "Taurus", "st": ["Taurus adalah banteng putih jelmaan Zeus sendiri. Ketika sang raja dewa jatuh hati pada Europa, putri dari Phoenicia, ia turun ke pantai dalam wujud banteng yang jinak dan berkilau agar sang putri mau mendekat.", "Begitu Europa duduk di punggungnya, banteng itu melompat ke laut dan berenang jauh sampai ke pulau Kreta. Di sana Zeus menampakkan wujud aslinya, dan dari Europa lahirlah Minos yang kelak menjadi raja besar Kreta.", "Bentuk banteng itu diabadikan di langit sebagai Taurus, lengkap dengan gugusan Hyades yang membentuk wajahnya dan Pleiades di pundaknya. Benua tempat Europa mendarat pun dinamai Eropa untuk mengenangnya."], "f": ["Bintang Aldebaran yang kemerahan adalah mata banteng dan salah satu bintang paling terang di langit.", "Gugusan Pleiades yang berada di pundak Taurus terdiri dari tujuh bersaudari putri Atlas."], "latin": "Taurus", "tanggal": "20 April sampai 20 Mei", "unsur": "Tanah", "bintang": "Aldebaran, Pleiades, dan Hyades"}, {"n": "Gemini", "st": ["Gemini adalah Castor dan Pollux, si kembar Dioscuri putra Leda. Castor lahir fana dari suami Leda, sedangkan Pollux lahir abadi dari Zeus, namun keduanya tumbuh tidak terpisahkan dan ikut dalam pelayaran Argo bersama Jason.", "Ketika Castor gugur dalam pertempuran, Pollux yang abadi menolak hidup tanpa saudaranya. Ia memohon kepada Zeus agar membagi keabadiannya, sehingga keduanya hidup bergantian: sehari di Olimpus, sehari di dunia bawah.", "Tersentuh oleh kasih itu, Zeus mengangkat keduanya ke langit berdampingan sebagai Gemini. Para pelaut Yunani memuja mereka sebagai pelindung, dan cahaya aneh di tiang kapal saat badai disebut api Santo Elmo sebagai tanda kehadiran mereka."], "f": ["Nama Dioscuri berarti anak Zeus, dan keduanya dipuja sebagai pelindung para pelaut.", "Bintang Castor sebenarnya adalah sistem enam bintang yang saling mengorbit."], "latin": "Gemini", "tanggal": "21 Mei sampai 20 Juni", "unsur": "Udara", "bintang": "Castor, Pollux, dan Alhena"}, {"n": "Cancer", "st": ["Cancer adalah Karkinos, kepiting raksasa yang hidup di rawa Lerna. Ketika Herakles bertarung melawan Hydra yang mengerikan, Hera yang membenci sang pahlawan mengirim kepiting itu untuk menggigit kakinya dan mengganggu pertarungan.", "Herakles yang kesakitan hanya perlu satu injakan untuk menghancurkan kepiting malang itu. Tugasnya melawan Hydra tetap berhasil, dan Hera kehilangan akalnya untuk menggagalkan sang pahlawan.", "Meski gagal, kesetiaan kepiting itu menyentuh Hera. Sang ratu dewa mengangkatnya ke langit menjadi rasi Cancer, tepat di jalur perjalanan matahari, dengan gugus Praesepe yang berpijar seperti kawanan di tengahnya."], "f": ["Gugus Praesepe di tengah Cancer dijuluki sarang lebah karena tampak seperti kawanan yang berkerumun.", "Cancer adalah rasi redup sehingga paling sulit ditemukan di antara dua belas zodiak."], "latin": "Cancer", "tanggal": "21 Juni sampai 22 Juli", "unsur": "Air", "bintang": "Altarf, Acubens, dan Praesepe"}, {"n": "Leo", "st": ["Leo adalah Singa Nemea, anak Typhon dan Echidna yang meneror lembah Nemea. Kulitnya kebal terhadap semua senjata, sehingga tombak dan pedang para pemburu patah begitu menyentuhnya.", "Herakles mendapat tugas pertamanya: membunuh singa itu. Karena senjatanya tidak mempan, ia bergulat dengan tangan kosong, mencekik singa itu sampai tak bernyawa, lalu menguliti bangkainya dengan cakarnya sendiri untuk dijadikan jubah kebal.", "Zeus mengangkat singa buas itu ke langit sebagai Leo, dengan bintang Regulus yang berarti raja kecil sebagai jantungnya. Jubah singa itu kemudian menemani Herakles dalam semua tugas beratnya."], "f": ["Regulus adalah salah satu dari empat bintang kerajaan Persia kuno yang menandai musim.", "Hujan meteor Leonid yang terkenal berasal dari arah rasi Leo setiap bulan November."], "latin": "Leo", "tanggal": "23 Juli sampai 22 Agustus", "unsur": "Api", "bintang": "Regulus, Denebola, dan Algieba"}, {"n": "Virgo", "st": ["Virgo adalah Astraea, dewi keadilan yang perawan dan putri Zeus serta Themis. Pada Zaman Emas ia tinggal di antara manusia dan mengajarkan hukum, namun setiap zaman yang datang membuat manusia semakin kejam dan serakah.", "Ketika tiba Zaman Besi yang penuh perang dan kebohongan, Astraea muak dan terbang meninggalkan bumi untuk selama-lamanya. Ia naik ke langit sambil membawa timbangan keadilannya, yang kemudian menjadi rasi Libra di sebelahnya.", "Di langit ia memegang setangkai gandum yang diwakili bintang Spica yang berkilau putih kebiruan. Sebagian kisah menyebut Virgo sebagai Demeter atau Persephone, dewi panen yang juga memegang gandum."], "f": ["Spica adalah bintang paling terang di Virgo dan salah satu yang paling terang di seluruh langit malam.", "Virgo adalah rasi terbesar kedua di langit setelah Hydra."], "latin": "Virgo", "tanggal": "23 Agustus sampai 22 September", "unsur": "Tanah", "bintang": "Spica, Porrima, dan Auva"}, {"n": "Libra", "st": ["Libra adalah timbangan keadilan milik Astraea yang dibawanya ke langit. Saat sang dewi keadilan naik meninggalkan bumi yang rusak, timbangannya ikut terangkat dan digantung di antara bintang-bintang sebagai pengingat hukum yang seimbang.", "Sebagian kisah menyebut timbangan itu milik Themis, ibu Astraea dan Titanida hukum ilahi, atau milik Dike yang menimbang benar dan salah setiap jiwa. Letaknya yang tepat di tengah jalur zodiak melambangkan keseimbangan siang dan malam saat matahari melintasinya.", "Libra adalah satu-satunya rasi zodiak yang bukan makhluk hidup, melainkan benda. Dahulu bintang-bintangnya dianggap sebagai capit Scorpio, sampai bangsa Romawi memisahkannya menjadi timbangan tersendiri."], "f": ["Libra adalah satu-satunya rasi zodiak yang berwujud benda mati, bukan makhluk.", "Nama bintang-bintangnya berasal dari bahasa Arab yang berarti capit utara dan capit selatan."], "latin": "Libra", "tanggal": "23 September sampai 22 Oktober", "unsur": "Udara", "bintang": "Zubeneschamali, Zubenelgenubi, dan Zubenelakrab"}, {"n": "Scorpio", "st": ["Scorpio adalah kalajengking raksasa utusan Gaia. Ketika pemburu sombong Orion membual bahwa ia bisa membunuh semua binatang di bumi, sang dewi bumi murka dan mengirim kalajengking itu untuk memberi pelajaran.", "Kalajengking itu menyengat tumit Orion hingga sang pemburu raksasa tumbang. Atas jasanya, Gaia menempatkannya di langit sebagai Scorpio dengan jantung merah menyala bernama Antares yang berarti saingan Mars.", "Orion pun diangkat ke langit sebagai rasi pemburu, namun keduanya diletakkan berseberangan: Scorpio terbit saat Orion terbenam, sehingga keduanya tidak pernah bertemu dan bertarung lagi untuk selamanya."], "f": ["Antares adalah bintang raksasa merah yang ukurannya ratusan kali matahari.", "Orion dan Scorpio tidak pernah tampak bersamaan di langit karena diletakkan berseberangan."], "latin": "Scorpio", "tanggal": "23 Oktober sampai 21 November", "unsur": "Air", "bintang": "Antares, Shaula, dan Dschubba"}, {"n": "Sagitarius", "st": ["Sagitarius adalah Chiron, centaur paling bijak yang berbeda dari kaumnya yang liar. Ia guru para pahlawan besar: Achilles, Jason, dan Herakles semuanya menimba ilmu memanah dan tabib darinya di gua Gunung Pelion.", "Suatu hari anak panah beracun Hydra milik Herakles meleset dan menancap di lutut Chiron. Karena Chiron abadi, ia tidak bisa mati dan harus menanggung sakit yang tak berkesudahan untuk selamanya.", "Akhirnya Chiron merelakan keabadiannya untuk membebaskan Prometheus yang dirantai, dan Zeus yang terharu mengangkatnya ke langit sebagai pemanah. Panahnya selalu terarah ke jantung Scorpio, mengingatkan perseteruan abadi itu."], "f": ["Chiron adalah guru dari hampir semua pahlawan besar Yunani, termasuk Achilles dan Jason.", "Panah Sagitarius selalu digambarkan mengarah tepat ke bintang Antares di jantung Scorpio."], "latin": "Sagittarius", "tanggal": "22 November sampai 21 Desember", "unsur": "Api", "bintang": "Kaus Australis, Nunki, dan Ascella"}, {"n": "Kaprikornus", "st": ["Kaprikornus adalah wujud dewa Pan saat melarikan diri dari monster Typhon. Ketika Typhon menyerbu Olimpus dan semua dewa kabur ke Mesir, Pan melompat ke Sungai Nil sambil mengubah dirinya menjadi kambing.", "Karena melompat terburu-buru, hanya separuh badannya yang sempat berubah: bagian atas menjadi kambing, bagian bawah menjadi ikan. Wujud kambing laut yang aneh inilah yang membuat Typhon bingung dan berhenti mengejar.", "Zeus yang melihat kecerdikan itu tertawa dan mengangkat wujud tersebut ke langit sebagai Kaprikornus. Sebagian kisah menyebut rasi ini sebagai Amalthea, kambing pengasuh yang menyusui Zeus kecil dengan susunya."], "f": ["Kaprikornus digambarkan sebagai makhluk setengah kambing setengah ikan.", "Kambing Amalthea yang mengasuh Zeus kecil tanduknya menjadi tanduk kelimpahan yang tidak pernah kosong."], "latin": "Capricornus", "tanggal": "22 Desember sampai 19 Januari", "unsur": "Tanah", "bintang": "Deneb Algedi, Dabih, dan Algedi"}, {"n": "Akuarius", "st": ["Akuarius adalah Ganymede, pemuda Troya yang paling tampan di antara semua manusia. Zeus terpikat dan turun dalam wujud elang raksasa, mencengkeram sang pemuda dan membawanya terbang ke Olimpus.", "Di sana Ganymede diangkat menjadi juru minuman para dewa, menuangkan nektar dan ambrosia dari kendi emasnya untuk Zeus dan seluruh penghuni langit. Ayahnya diberi hadiah kuda-kuda ilahi sebagai ganti.", "Kendi yang dituangkannya tidak pernah kering, dan alirannya menjadi rasi Akuarius si pembawa air. Elang yang membawanya pun diangkat menjadi rasi Aquila yang terbang tidak jauh darinya."], "f": ["Ganymede adalah satu-satunya manusia fana yang bertugas sebagai juru minuman para dewa.", "Nama Jupiter untuk planet terbesar diambil dari nama Zeus, sang penculik Ganymede."], "latin": "Aquarius", "tanggal": "20 Januari sampai 18 Februari", "unsur": "Udara", "bintang": "Sadalsuud, Sadalmelik, dan Skat"}, {"n": "Pises", "st": ["Pises adalah Aphrodite dan putranya Eros yang sedang berjalan di tepi Sungai Eufrat ketika monster Typhon tiba-tiba muncul. Ketakutan, keduanya melompat ke sungai dan berubah menjadi ikan agar bisa berenang menyelamatkan diri.", "Agar tidak terpisah dalam arus yang deras, ibu dan anak itu mengikat ekor mereka dengan tali. Mereka berenang berdampingan sampai bahaya berlalu, dan tali pengikat itu tidak pernah dilepas.", "Kedua ikan yang terikat tali itu diangkat ke langit sebagai Pises, dengan simpul talinya ditandai bintang Alrescha. Kisah ini juga menjadi asal mula simbol ikan yang kemudian terkenal itu."], "f": ["Pises digambarkan sebagai dua ekor ikan yang ekornya terikat oleh seutas tali.", "Bintang Alrescha yang berarti tali menandai simpul pengikat kedua ikan itu."], "latin": "Pisces", "tanggal": "19 Februari sampai 20 Maret", "unsur": "Air", "bintang": "Alrescha, Fumalsamakah, dan Alpherg"}];
+
+/* ===== FX PACK v2 — inti interaktif (solid, hormat reduced-motion) ===== */
+var FX = (function(){
+  var red = function(){ try{ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } };
+  var halus = function(){ try{ return window.matchMedia('(hover: hover) and (pointer: fine)').matches; }catch(e){ return true; } };
+  var mx = innerWidth/2, my = innerHeight/2, kx = mx, ky = my, sk = 1, skT = 1, el = null;
+
+  function kursor(){
+    if(red() || !halus()) return;
+    if(document.getElementById('kursor')) return;
+    el = document.createElement('div');
+    el.id = 'kursor';
+    document.body.appendChild(el);
+    addEventListener('pointermove', function(e){
+      mx = e.clientX; my = e.clientY;
+      el.classList.add('nyala');
+      var t = e.target && e.target.closest;
+      var hot = t ? e.target.closest('.card,.btn,.chip,a,button,input,.close') : null;
+      skT = hot ? 1.9 : 1;
+    }, {passive:true});
+    document.addEventListener('mouseleave', function(){ if(el) el.classList.remove('nyala'); });
+    (function loop(){
+      kx += (mx - kx) * 0.2;
+      ky += (my - ky) * 0.2;
+      sk += (skT - sk) * 0.18;
+      if(el) el.style.transform = 'translate3d(' + kx + 'px,' + ky + 'px,0) scale(' + sk.toFixed(3) + ')';
+      if(Langit){ Langit.mx = mx / (innerWidth||1); Langit.my = my / (innerHeight||1); }
+      requestAnimationFrame(loop);
+    })();
+  }
+
+  function tilt(scope){
+    if(red() || !halus()) return;
+    var cards = (scope || document).querySelectorAll ? (scope.querySelectorAll ? scope.querySelectorAll('.card') : document.querySelectorAll('.card')) : [];
+    Array.prototype.forEach.call(cards, function(c){
+      if(c.__tilt) return;
+      c.__tilt = true;
+      var gl = c.querySelector('.tilt');
+      if(!gl){ gl = document.createElement('span'); gl.className = 'tilt'; c.appendChild(gl); }
+      c.classList.add('tilt-on');
+      c.addEventListener('pointermove', function(e){
+        var r = c.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width - 0.5;
+        var py = (e.clientY - r.top) / r.height - 0.5;
+        c.style.setProperty('--ry', (px * 14).toFixed(2) + 'deg');
+        c.style.setProperty('--rx', (-py * 11).toFixed(2) + 'deg');
+        c.style.setProperty('--mx', ((px + 0.5) * 100).toFixed(1) + '%');
+        c.style.setProperty('--my', ((py + 0.5) * 100).toFixed(1) + '%');
+      });
+      c.addEventListener('pointerleave', function(){
+        c.style.setProperty('--rx', '0deg');
+        c.style.setProperty('--ry', '0deg');
+      });
+    });
+  }
+
+  function magnet(){
+    if(red() || !halus()) return;
+    var sels = '.btn,.chip,#enterBtn,.toTop,.close,.sheet-nav button';
+    document.addEventListener('pointermove', function(e){
+      var t = e.target && e.target.closest ? e.target.closest(sels) : null;
+      Array.prototype.forEach.call(document.querySelectorAll('.magnet'), function(m){
+        if(m !== t){ m.classList.remove('magnet'); m.style.transform = ''; }
+      });
+      if(!t) return;
+      var r = t.getBoundingClientRect();
+      var dx = e.clientX - (r.left + r.width/2);
+      var dy = e.clientY - (r.top + r.height/2);
+      var j = Math.max(-1, Math.min(1, dx / (r.width/2 || 1)));
+      var k = Math.max(-1, Math.min(1, dy / (r.height/2 || 1)));
+      t.classList.add('magnet');
+      t.style.transform = 'translate(' + (j*3.5).toFixed(1) + 'px,' + (k*3.5).toFixed(1) + 'px)';
+    }, {passive:true});
+    document.addEventListener('pointerleave', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.magnet'), function(m){ m.style.transform=''; m.classList.remove('magnet'); });
+    }, true);
+  }
+
+  var lastJ = 0;
+  function jejak(){
+    if(red() || !halus()) return;
+    document.addEventListener('pointermove', function(e){
+      var now = performance.now();
+      if(now - lastJ < 75) return;
+      if(e.target && e.target.closest && e.target.closest('input,textarea')) return;
+      lastJ = now;
+      if(document.querySelectorAll('.jejak').length > 28) return;
+      var s = document.createElement('span');
+      s.className = 'jejak';
+      s.style.left = e.clientX + 'px';
+      s.style.top = e.clientY + 'px';
+      document.body.appendChild(s);
+      setTimeout(function(){ if(s.parentNode) s.parentNode.removeChild(s); }, 900);
+    }, {passive:true});
+  }
+
+  function hitung(){
+    var done = false;
+    function jalan(){
+      if(done) return; done = true;
+      Array.prototype.forEach.call(document.querySelectorAll('[id^="sDewa"],[id^="sGrup"],[id^="sSim"],[id^="sRasi"]'), function(n){
+        var target = parseInt((n.textContent || '').replace(/\D/g, ''), 10);
+        if(!target || red()) return;
+        var t0 = performance.now(), dur = 1300;
+        function fr(t){
+          var p = Math.min(1, (t - t0) / dur);
+          var e = 1 - Math.pow(1 - p, 3);
+          n.textContent = Math.round(target * e);
+          if(p < 1) requestAnimationFrame(fr);
+          else n.textContent = target;
+        }
+        requestAnimationFrame(fr);
+      });
+      var sb = document.getElementById('sBintang');
+      if(sb && !red()){
+        var m = (sb.textContent || '').match(/(\d+)/);
+        if(m){
+          var target = parseInt(m[1], 10), t0 = performance.now(), dur = 1400;
+          (function fr(t){
+            var p = Math.min(1, (t - t0) / dur);
+            var e = 1 - Math.pow(1 - p, 3);
+            sb.textContent = Math.round(target * e) + '+';
+            if(p < 1) requestAnimationFrame(fr);
+          })(t0);
+        }
+      }
+    }
+    if('IntersectionObserver' in window){
+      var h = document.querySelector('.hero');
+      if(!h){ jalan(); return; }
+      var io = new IntersectionObserver(function(en){
+        en.forEach(function(x){ if(x.isIntersecting){ jalan(); io.disconnect(); } });
+      });
+      io.observe(h);
+      setTimeout(jalan, 3500);
+    } else jalan();
+  }
+
+  function heroParallax(){
+    if(red() || !halus()) return;
+    var hero = document.querySelector('.hero');
+    if(!hero) return;
+    var ped = hero.querySelector('.pediment'), tit = hero.querySelector('.title'),
+        kik = hero.querySelector('.kicker'), led = hero.querySelector('.lede'),
+        sta = hero.querySelector('.stats'), tem = document.getElementById('temple'),
+        c1 = document.querySelector('.cloud.c1'), c2 = document.querySelector('.cloud.c2');
+    var tx = 0, ty = 0, cx = 0, cy = 0;
+    hero.addEventListener('pointermove', function(e){
+      var r = hero.getBoundingClientRect();
+      tx = (e.clientX - r.left) / r.width - 0.5;
+      ty = (e.clientY - r.top) / r.height - 0.5;
+    });
+    hero.addEventListener('pointerleave', function(){ tx = 0; ty = 0; });
+    (function loop(){
+      cx += (tx - cx) * 0.06;
+      cy += (ty - cy) * 0.06;
+      if(ped) ped.style.translate = (cx*12).toFixed(1) + 'px ' + (cy*8).toFixed(1) + 'px';
+      if(tit) tit.style.translate = (cx*7).toFixed(1) + 'px ' + (cy*5).toFixed(1) + 'px';
+      if(kik) kik.style.translate = (cx*9).toFixed(1) + 'px 0px';
+      if(led) led.style.translate = (cx*5).toFixed(1) + 'px 0px';
+      if(sta) sta.style.translate = (cx*4).toFixed(1) + 'px 0px';
+      if(tem) tem.style.translate = 'calc(-50% + ' + (cx*-14).toFixed(1) + 'px) 0px';
+      if(c1) c1.style.translate = (cx*34).toFixed(1) + 'px 0px';
+      if(c2) c2.style.translate = (cx*-30).toFixed(1) + 'px 0px';
+      requestAnimationFrame(loop);
+    })();
+  }
+
+  return { kursor:kursor, tilt:tilt, magnet:magnet, jejak:jejak, hitung:hitung, heroParallax:heroParallax,
+    red:red, halus:halus };
+})();
+
 /* Halaman Rasi Bintang — render, modal, peta langit, musik */
 var $ = function(s, r){ return (r || document).querySelector(s); };
 var $$ = function(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
@@ -1000,6 +1206,166 @@ function step(dir){
   openZ(ZDATA[i]);
 }
 init();
+/* ===== FX PACK v2 — zodiak (langit, tilt, ledakan, kursor) ===== */
+var Langit = Langit || {
+  c:null, x:null, w:0, h:0, dpr:1, arr:[], raf:0, last:0, aur:[], star:null, nextStar:3500, t:0, mx:0.5, my:0.3,
+  start:function(){
+    if(this.c) return;
+    try{ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; }catch(e){}
+    this.c = document.getElementById('ambien');
+    if(!this.c || !this.c.getContext) return;
+    this.x = this.c.getContext('2d');
+    for(var i=0;i<3;i++) this.aur.push({y:0.04+i*0.055,amp:20+i*13,sp:0.00005+i*0.000035,
+      hue:i===0?'212,175,55':(i===1?'90,190,200':'150,120,220'),a:0.055-i*0.013,ph:Math.random()*9});
+    var self=this;
+    this.resize();
+    addEventListener('resize', function(){ self.resize(); });
+    document.addEventListener('visibilitychange', function(){ if(document.hidden) self.stop(); else self.run(); });
+    this.run();
+  },
+  resize:function(){
+    if(!this.c) return;
+    this.dpr = Math.min(devicePixelRatio||1, 2);
+    this.w = this.c.width = Math.floor(innerWidth*this.dpr);
+    this.h = this.c.height = Math.floor(innerHeight*this.dpr);
+    this.c.style.width = innerWidth+'px'; this.c.style.height = innerHeight+'px';
+    var n = Math.min(46, Math.round(innerWidth/30)), self=this;
+    this.arr = [];
+    for(var i=0;i<n;i++) this.arr.push(this.spawn(true));
+  },
+  spawn:function(anywhere){
+    return {x:Math.random()*this.w, y:anywhere?Math.random()*this.h:this.h+10*this.dpr,
+      r:(0.5+Math.random()*1.8)*this.dpr, vy:(0.06+Math.random()*0.3)*this.dpr,
+      vx:(Math.random()-0.5)*0.14*this.dpr, a:0.07+Math.random()*0.34,
+      ph:Math.random()*6.28, sp:0.004+Math.random()*0.013, gold:Math.random()>0.32};
+  },
+  run:function(){
+    if(this.raf) return;
+    var self=this;
+    var loop=function(t){ self.raf=requestAnimationFrame(loop);
+      var dt=Math.min(50,t-(self.last||t)); self.last=t; self.step(t,dt); };
+    this.raf=requestAnimationFrame(loop);
+  },
+  stop:function(){ if(this.raf){ cancelAnimationFrame(this.raf); this.raf=0; } },
+  aurora:function(){
+    var x=this.x,w=this.w,h=this.h; if(!x) return;
+    var t=this.t||0, mxx=(this.mx==null?0.5:this.mx)-0.5;
+    x.save();
+    try{
+      x.globalCompositeOperation='lighter';
+      for(var i=0;i<this.aur.length;i++){
+        var A=this.aur[i];
+        var yB=h*A.y+Math.sin(t*A.sp+A.ph+mxx*2)*A.amp;
+        var gr=x.createLinearGradient(0,yB-60,0,yB+90);
+        gr.addColorStop(0,'rgba('+A.hue+',0)');
+        gr.addColorStop(0.5,'rgba('+A.hue+','+A.a.toFixed(3)+')');
+        gr.addColorStop(1,'rgba('+A.hue+',0)');
+        x.fillStyle=gr; x.beginPath(); x.moveTo(0,yB);
+        for(var px=0;px<=w;px+=Math.max(24,w/60)){
+          var yy=yB+Math.sin(px/w*6.28*1.6+t*0.00035+A.ph+mxx*3)*(A.amp*0.9)
+                 +Math.sin(px/w*6.28*3.7+A.ph*2)*(A.amp*0.28);
+          x.lineTo(px,yy);
+        }
+        x.lineTo(w,yB+110); x.lineTo(0,yB+110); x.closePath(); x.fill();
+      }
+    }catch(e){}
+    x.restore();
+  },
+  step:function(now,dt){
+    var x=this.x,w=this.w,h=this.h,d=this.dpr,i,p;
+    this.t=now; x.clearRect(0,0,w,h); this.aurora();
+    if(this.nextStar==null){ this.nextStar=5000; this.star=null; }
+    this.nextStar-=dt;
+    if(this.nextStar<=0&&!this.star){
+      this.nextStar=9000+Math.random()*9000;
+      this.star={x:Math.random()*w*0.6+w*0.2,y:Math.random()*h*0.28,life:1,
+        vx:(3+Math.random()*2)*d,vy:(1.1+Math.random())*d};
+    }
+    if(this.star){
+      var S=this.star;
+      S.x+=S.vx*dt*0.06; S.y+=S.vy*dt*0.06; S.life-=dt/1200;
+      if(S.life<=0) this.star=null;
+      else{
+        var len=80*d*S.life;
+        var gr=x.createLinearGradient(S.x,S.y,S.x-len,S.y-len*0.36);
+        gr.addColorStop(0,'rgba(255,244,214,'+(0.8*S.life).toFixed(3)+')');
+        gr.addColorStop(1,'rgba(255,244,214,0)');
+        x.strokeStyle=gr; x.lineWidth=1.3*d;
+        x.beginPath(); x.moveTo(S.x,S.y); x.lineTo(S.x-len,S.y-len*0.36); x.stroke();
+      }
+    }
+    var mxx=(this.mx==null?0.5:this.mx)-0.5;
+    for(i=0;i<this.arr.length;i++){
+      p=this.arr[i];
+      p.y-=p.vy*dt*0.06;
+      p.x+=(p.vx+mxx*0.35)*dt*0.06+Math.sin(p.ph)*0.16*d;
+      p.ph+=p.sp*dt;
+      if(p.y<-12) this.arr[i]=p=this.spawn(false);
+      var tw=p.a*(0.5+0.5*Math.sin(p.ph*1.7));
+      x.beginPath(); x.arc(p.x,p.y,p.r,0,6.2832);
+      x.fillStyle=p.gold?('rgba(232,209,159,'+tw.toFixed(3)+')'):('rgba(255,255,255,'+(tw*0.7).toFixed(3)+')');
+      x.fill();
+      if(p.r>1.6*d){ x.beginPath(); x.arc(p.x,p.y,p.r*3.6,0,6.2832);
+        x.fillStyle='rgba(212,175,55,'+(tw*0.08).toFixed(3)+')'; x.fill(); }
+    }
+  }
+};
+function ledakan(x, y, warna){
+  try{ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; }catch(e){}
+  var host = document.getElementById('burst');
+  if(!host || x == null || y == null) return;
+  var b = document.createElement('span');
+  b.className = 'burst'; b.style.left = x+'px'; b.style.top = y+'px';
+  if(warna) b.style.borderColor = warna;
+  host.appendChild(b);
+  setTimeout(function(){ if(b.parentNode) b.parentNode.removeChild(b); }, 750);
+  for(var i=0;i<12;i++){
+    (function(i){
+      var s=document.createElement('span'); s.className='spark';
+      var ang=(Math.PI*2*i)/12+Math.random()*0.5, jauh=46+Math.random()*72;
+      s.style.left=x+'px'; s.style.top=y+'px';
+      s.style.setProperty('--dx',(Math.cos(ang)*jauh).toFixed(1)+'px');
+      s.style.setProperty('--dy',(Math.sin(ang)*jauh).toFixed(1)+'px');
+      if(warna&&i%3===0) s.style.background=warna;
+      host.appendChild(s);
+      setTimeout(function(){ if(s.parentNode) s.parentNode.removeChild(s); }, 900);
+    })(i);
+  }
+}
+(function(){
+  try{
+    if(window.matchMedia('(hover: hover) and (pointer: fine)').matches
+      && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.body.classList.add('tilt3d');
+    FX.kursor(); FX.magnet(); FX.jejak(); FX.hitung(); FX.heroParallax();
+    Langit.start();
+    var __r = render;
+    render = function(){
+      __r();
+      try{
+        var cards = document.querySelectorAll('#zgrid .card, .card');
+        Array.prototype.forEach.call(cards, function(c, i){
+          c.style.transitionDelay = Math.min(10, i % 12) * 35 + 'ms';
+        });
+        FX.tilt(document);
+      }catch(e){}
+    };
+    render();
+    var __o = openZ;
+    openZ = function(z){
+      try{
+        var el = document.activeElement;
+        var r = el && el.getBoundingClientRect ? el.getBoundingClientRect() : null;
+        if(r) ledakan(r.left + r.width/2, r.top + r.height/2, (WARNA_UNSUR[z.unsur]||'#d4af37'));
+      }catch(e){}
+      __o(z);
+      try{
+        var sh = document.getElementById('sheet');
+        if(sh){ sh.style.animation='none'; void sh.offsetWidth; sh.style.animation=''; }
+      }catch(e){}
+    };
+  }catch(e){}
+})();
+
 </script>
 </body>
 </html>

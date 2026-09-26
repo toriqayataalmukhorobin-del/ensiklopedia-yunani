@@ -626,6 +626,40 @@ body::after{animation:drift 240s linear infinite, starTwinkle 7s ease-in-out inf
 @media (prefers-reduced-motion:reduce){
   body::after,.title,.pediment,.medal,.group-head .rule{animation:none !important}
 }
+
+/* ============================================================
+   FX PACK v2 — kursor cahaya, magnetik, modal spring, jejak
+   ============================================================ */
+#kursor{position:fixed;left:0;top:0;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;
+  z-index:9999;pointer-events:none;opacity:0;transition:opacity .4s ease;will-change:transform;
+  background:radial-gradient(circle,rgba(250,236,196,.95) 0 2px,rgba(212,175,55,.4) 4px,rgba(212,175,55,.12) 13px,transparent 18px)}
+#kursor.nyala{opacity:.9}
+.jejak{position:fixed;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;pointer-events:none;z-index:9998;
+  background:radial-gradient(circle,#fdf3d0 0 1.5px,rgba(212,175,55,.8) 2.5px,transparent 4px);
+  animation:jejakFade .85s ease-out forwards}
+@keyframes jejakFade{to{transform:translateY(-22px) scale(.1);opacity:0}}
+@keyframes sheetPop{from{opacity:0;transform:translateY(30px) scale(.955)}to{opacity:1;transform:none}}
+.modal.open .sheet{animation:sheetPop .55s cubic-bezier(.2,1.25,.3,1) both}
+.card:active{transform:translateY(-3px) scale(.978) !important}
+.card.tilt-on{transition:transform .16s ease,box-shadow .35s ease,border-color .35s ease,background .35s ease}
+@keyframes chipPop{0%{transform:scale(.88)}60%{transform:scale(1.07)}100%{transform:scale(1)}}
+.chip.on{animation:chipPop .35s ease}
+.btn,.chip,#enterBtn,.toTop,.close,.sheet-nav button{will-change:transform}
+.search input:focus{animation:cariGlow 2.6s ease-in-out infinite}
+@keyframes cariGlow{0%,100%{box-shadow:0 0 0 4px rgba(212,175,55,.12)}50%{box-shadow:0 0 0 6px rgba(212,175,55,.22),0 0 26px -4px rgba(212,175,55,.45)}}
+#progress{box-shadow:0 0 12px rgba(212,175,55,.75)}
+.hero .pediment,.hero .title,.hero .kicker,.hero .lede,.hero .stats,#temple,.cloud{will-change:transform}
+.zimg,.zbig{transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.card:hover .zimg{transform:scale(1.04) rotate(-.6deg)}
+.card:hover .zbig{transform:scale(1.02)}
+.sheet .zbig svg,.card .zimg svg{filter:drop-shadow(0 8px 22px rgba(0,0,0,.5))}
+@media (hover:none),(pointer:coarse){#kursor,.jejak{display:none !important}}
+@media (prefers-reduced-motion:reduce){
+  #kursor,.jejak{display:none !important}
+  .modal.open .sheet{animation:none !important}
+  .chip.on,.search input:focus{animation:none !important}
+}
+
 </style>
 </head>
 <body>
@@ -1258,7 +1292,7 @@ function stars(r){
     rr = 20 + r() * 33;
     x = 60 + Math.cos(a) * rr * 1.02;
     y = 60 + Math.sin(a) * rr;
-    s += '<circle cx="' + P(x, y) + '" r="' + (0.7 + r() * 1.1).toFixed(2) + '" fill="rgba(255,255,255,' + (0.35 + r() * 0.4).toFixed(2) + ')"/>';
+    s += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + (0.7 + r() * 1.1).toFixed(2) + '" fill="rgba(255,255,255,' + (0.35 + r() * 0.4).toFixed(2) + ')"/>';
   }
   return s;
 }
@@ -1723,7 +1757,35 @@ var Langit = {
     this.raf = requestAnimationFrame(loop);
   },
   stop: function(){ if(this.raf){ cancelAnimationFrame(this.raf); this.raf = 0; } },
-  aurora: function(){},
+  aurora: function(){
+    var x = this.x, w = this.w, h = this.h;
+    if(!x) return;
+    var t = this.t || 0;
+    var mxx = (this.mx == null ? 0.5 : this.mx) - 0.5;
+    x.save();
+    try{
+      x.globalCompositeOperation = 'lighter';
+      for(var i = 0; i < this.aur.length; i++){
+        var A = this.aur[i];
+        var yB = h * A.y + Math.sin(t * A.sp + A.ph + mxx * 2) * A.amp;
+        var gr = x.createLinearGradient(0, yB - 60, 0, yB + 90);
+        gr.addColorStop(0, 'rgba(' + A.hue + ',0)');
+        gr.addColorStop(0.5, 'rgba(' + A.hue + ',' + A.a.toFixed(3) + ')');
+        gr.addColorStop(1, 'rgba(' + A.hue + ',0)');
+        x.fillStyle = gr;
+        x.beginPath();
+        x.moveTo(0, yB);
+        for(var px = 0; px <= w; px += Math.max(24, w / 60)){
+          var yy = yB + Math.sin(px / w * 6.28 * 1.6 + t * 0.00035 + A.ph + mxx * 3) * (A.amp * 0.9)
+                 + Math.sin(px / w * 6.28 * 3.7 + A.ph * 2) * (A.amp * 0.28);
+          x.lineTo(px, yy);
+        }
+        x.lineTo(w, yB + 110); x.lineTo(0, yB + 110);
+        x.closePath(); x.fill();
+      }
+    }catch(e){}
+    x.restore();
+  },
   step: function(now, dt){
     var x = this.x, w = this.w, h = this.h, d = this.dpr, i, p;
     this.t = now;
@@ -1804,6 +1866,178 @@ var Realam = {
   }
 };
 
+
+/* ===== FX PACK v2 — inti interaktif (solid, hormat reduced-motion) ===== */
+var FX = (function(){
+  var red = function(){ try{ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } };
+  var halus = function(){ try{ return window.matchMedia('(hover: hover) and (pointer: fine)').matches; }catch(e){ return true; } };
+  var mx = innerWidth/2, my = innerHeight/2, kx = mx, ky = my, sk = 1, skT = 1, el = null;
+
+  function kursor(){
+    if(red() || !halus()) return;
+    if(document.getElementById('kursor')) return;
+    el = document.createElement('div');
+    el.id = 'kursor';
+    document.body.appendChild(el);
+    addEventListener('pointermove', function(e){
+      mx = e.clientX; my = e.clientY;
+      el.classList.add('nyala');
+      var t = e.target && e.target.closest;
+      var hot = t ? e.target.closest('.card,.btn,.chip,a,button,input,.close') : null;
+      skT = hot ? 1.9 : 1;
+    }, {passive:true});
+    document.addEventListener('mouseleave', function(){ if(el) el.classList.remove('nyala'); });
+    (function loop(){
+      kx += (mx - kx) * 0.2;
+      ky += (my - ky) * 0.2;
+      sk += (skT - sk) * 0.18;
+      if(el) el.style.transform = 'translate3d(' + kx + 'px,' + ky + 'px,0) scale(' + sk.toFixed(3) + ')';
+      if(Langit){ Langit.mx = mx / (innerWidth||1); Langit.my = my / (innerHeight||1); }
+      requestAnimationFrame(loop);
+    })();
+  }
+
+  function tilt(scope){
+    if(red() || !halus()) return;
+    var cards = (scope || document).querySelectorAll ? (scope.querySelectorAll ? scope.querySelectorAll('.card') : document.querySelectorAll('.card')) : [];
+    Array.prototype.forEach.call(cards, function(c){
+      if(c.__tilt) return;
+      c.__tilt = true;
+      var gl = c.querySelector('.tilt');
+      if(!gl){ gl = document.createElement('span'); gl.className = 'tilt'; c.appendChild(gl); }
+      c.classList.add('tilt-on');
+      c.addEventListener('pointermove', function(e){
+        var r = c.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width - 0.5;
+        var py = (e.clientY - r.top) / r.height - 0.5;
+        c.style.setProperty('--ry', (px * 14).toFixed(2) + 'deg');
+        c.style.setProperty('--rx', (-py * 11).toFixed(2) + 'deg');
+        c.style.setProperty('--mx', ((px + 0.5) * 100).toFixed(1) + '%');
+        c.style.setProperty('--my', ((py + 0.5) * 100).toFixed(1) + '%');
+      });
+      c.addEventListener('pointerleave', function(){
+        c.style.setProperty('--rx', '0deg');
+        c.style.setProperty('--ry', '0deg');
+      });
+    });
+  }
+
+  function magnet(){
+    if(red() || !halus()) return;
+    var sels = '.btn,.chip,#enterBtn,.toTop,.close,.sheet-nav button';
+    document.addEventListener('pointermove', function(e){
+      var t = e.target && e.target.closest ? e.target.closest(sels) : null;
+      Array.prototype.forEach.call(document.querySelectorAll('.magnet'), function(m){
+        if(m !== t){ m.classList.remove('magnet'); m.style.transform = ''; }
+      });
+      if(!t) return;
+      var r = t.getBoundingClientRect();
+      var dx = e.clientX - (r.left + r.width/2);
+      var dy = e.clientY - (r.top + r.height/2);
+      var j = Math.max(-1, Math.min(1, dx / (r.width/2 || 1)));
+      var k = Math.max(-1, Math.min(1, dy / (r.height/2 || 1)));
+      t.classList.add('magnet');
+      t.style.transform = 'translate(' + (j*3.5).toFixed(1) + 'px,' + (k*3.5).toFixed(1) + 'px)';
+    }, {passive:true});
+    document.addEventListener('pointerleave', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.magnet'), function(m){ m.style.transform=''; m.classList.remove('magnet'); });
+    }, true);
+  }
+
+  var lastJ = 0;
+  function jejak(){
+    if(red() || !halus()) return;
+    document.addEventListener('pointermove', function(e){
+      var now = performance.now();
+      if(now - lastJ < 75) return;
+      if(e.target && e.target.closest && e.target.closest('input,textarea')) return;
+      lastJ = now;
+      if(document.querySelectorAll('.jejak').length > 28) return;
+      var s = document.createElement('span');
+      s.className = 'jejak';
+      s.style.left = e.clientX + 'px';
+      s.style.top = e.clientY + 'px';
+      document.body.appendChild(s);
+      setTimeout(function(){ if(s.parentNode) s.parentNode.removeChild(s); }, 900);
+    }, {passive:true});
+  }
+
+  function hitung(){
+    var done = false;
+    function jalan(){
+      if(done) return; done = true;
+      Array.prototype.forEach.call(document.querySelectorAll('[id^="sDewa"],[id^="sGrup"],[id^="sSim"],[id^="sRasi"]'), function(n){
+        var target = parseInt((n.textContent || '').replace(/\D/g, ''), 10);
+        if(!target || red()) return;
+        var t0 = performance.now(), dur = 1300;
+        function fr(t){
+          var p = Math.min(1, (t - t0) / dur);
+          var e = 1 - Math.pow(1 - p, 3);
+          n.textContent = Math.round(target * e);
+          if(p < 1) requestAnimationFrame(fr);
+          else n.textContent = target;
+        }
+        requestAnimationFrame(fr);
+      });
+      var sb = document.getElementById('sBintang');
+      if(sb && !red()){
+        var m = (sb.textContent || '').match(/(\d+)/);
+        if(m){
+          var target = parseInt(m[1], 10), t0 = performance.now(), dur = 1400;
+          (function fr(t){
+            var p = Math.min(1, (t - t0) / dur);
+            var e = 1 - Math.pow(1 - p, 3);
+            sb.textContent = Math.round(target * e) + '+';
+            if(p < 1) requestAnimationFrame(fr);
+          })(t0);
+        }
+      }
+    }
+    if('IntersectionObserver' in window){
+      var h = document.querySelector('.hero');
+      if(!h){ jalan(); return; }
+      var io = new IntersectionObserver(function(en){
+        en.forEach(function(x){ if(x.isIntersecting){ jalan(); io.disconnect(); } });
+      });
+      io.observe(h);
+      setTimeout(jalan, 3500);
+    } else jalan();
+  }
+
+  function heroParallax(){
+    if(red() || !halus()) return;
+    var hero = document.querySelector('.hero');
+    if(!hero) return;
+    var ped = hero.querySelector('.pediment'), tit = hero.querySelector('.title'),
+        kik = hero.querySelector('.kicker'), led = hero.querySelector('.lede'),
+        sta = hero.querySelector('.stats'), tem = document.getElementById('temple'),
+        c1 = document.querySelector('.cloud.c1'), c2 = document.querySelector('.cloud.c2');
+    var tx = 0, ty = 0, cx = 0, cy = 0;
+    hero.addEventListener('pointermove', function(e){
+      var r = hero.getBoundingClientRect();
+      tx = (e.clientX - r.left) / r.width - 0.5;
+      ty = (e.clientY - r.top) / r.height - 0.5;
+    });
+    hero.addEventListener('pointerleave', function(){ tx = 0; ty = 0; });
+    (function loop(){
+      cx += (tx - cx) * 0.06;
+      cy += (ty - cy) * 0.06;
+      if(ped) ped.style.translate = (cx*12).toFixed(1) + 'px ' + (cy*8).toFixed(1) + 'px';
+      if(tit) tit.style.translate = (cx*7).toFixed(1) + 'px ' + (cy*5).toFixed(1) + 'px';
+      if(kik) kik.style.translate = (cx*9).toFixed(1) + 'px 0px';
+      if(led) led.style.translate = (cx*5).toFixed(1) + 'px 0px';
+      if(sta) sta.style.translate = (cx*4).toFixed(1) + 'px 0px';
+      if(tem) tem.style.translate = 'calc(-50% + ' + (cx*-14).toFixed(1) + 'px) 0px';
+      if(c1) c1.style.translate = (cx*34).toFixed(1) + 'px 0px';
+      if(c2) c2.style.translate = (cx*-30).toFixed(1) + 'px 0px';
+      requestAnimationFrame(loop);
+    })();
+  }
+
+  return { kursor:kursor, tilt:tilt, magnet:magnet, jejak:jejak, hitung:hitung, heroParallax:heroParallax,
+    red:red, halus:halus };
+})();
+
 /* ============================================================
    9. GERBANG PEMBUKA, TILT, LEDAKAN
    ============================================================ */
@@ -1856,24 +2090,64 @@ var Gerbang = {
   }
 };
 
-function pasangTilt(){}
-function pasangTiltOn(){}
+function pasangTilt(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  try{
+    if(window.matchMedia('(hover: hover) and (pointer: fine)').matches) document.body.classList.add('tilt3d');
+    FX.kursor(); FX.magnet(); FX.jejak(); FX.hitung(); FX.heroParallax();
+  }catch(e){}
+}
+function pasangTiltOn(scope){
+  try{ FX.tilt(scope || document); }catch(e){}
+}
 
-/* sentuhan cahaya tipis saat kartu diklik */
+/* sentuhan cahaya + hujan percik saat kartu diklik */
 function ledakan(x, y, warna){
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var host = document.getElementById('burst');
-  if(!host) return;
+  if(!host || x == null || y == null) return;
   var b = document.createElement('span');
   b.className = 'burst';
   b.style.left = x + 'px';
   b.style.top = y + 'px';
   if(warna) b.style.borderColor = warna;
   host.appendChild(b);
-  setTimeout(function(){ if(b.parentNode) b.parentNode.removeChild(b); }, 550);
+  setTimeout(function(){ if(b.parentNode) b.parentNode.removeChild(b); }, 750);
+  var n = 12;
+  for(var i = 0; i < n; i++){
+    (function(i){
+      var s = document.createElement('span');
+      s.className = 'spark';
+      var ang = (Math.PI * 2 * i) / n + Math.random() * 0.5;
+      var jauh = 46 + Math.random() * 72;
+      s.style.left = x + 'px';
+      s.style.top = y + 'px';
+      s.style.setProperty('--dx', (Math.cos(ang) * jauh).toFixed(1) + 'px');
+      s.style.setProperty('--dy', (Math.sin(ang) * jauh).toFixed(1) + 'px');
+      if(warna && i % 3 === 0){ s.style.background = warna; }
+      host.appendChild(s);
+      setTimeout(function(){ if(s.parentNode) s.parentNode.removeChild(s); }, 900);
+    })(i);
+  }
 }
 
-var Parallax = { start: function(){} };
+var Parallax = { start: function(){
+  try{ FX.heroParallax(); }catch(e){}
+  try{
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var tem = document.getElementById('temple');
+    if(!tem) return;
+    var tick = false;
+    addEventListener('scroll', function(){
+      if(tick) return; tick = true;
+      requestAnimationFrame(function(){
+        tick = false;
+        var y = scrollY || 0;
+        if(y < innerHeight * 1.2) tem.style.marginBottom = (-y * 0.06).toFixed(1) + 'px';
+      });
+    }, {passive:true});
+  }catch(e){}
+} };
 
 /* ============================================================
    10. NYALA
